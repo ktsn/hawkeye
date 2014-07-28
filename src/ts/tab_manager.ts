@@ -57,7 +57,6 @@ class TabManager {
 
   addTab(chTab: chrome.tabs.Tab) : void {
     var tab = new Tab(chTab);
-    tab.loading = true;
     this.tabs.push(tab);
 
     console.log("added tab");
@@ -124,7 +123,7 @@ class Tab {
   id: number;
   title: string;
   url: string;
-  loading: boolean = false;
+  loading: boolean;
 
   _snapshot: Snapshot;
 
@@ -132,6 +131,7 @@ class Tab {
     this.id = tab.id;
     this.title = tab.title;
     this.url = tab.url;
+    this.loading = tab.status === "loading";
     this._snapshot = new Snapshot();
   }
 
