@@ -7,16 +7,27 @@
  * http://opensource.org/licenses/mit-license.php
  */
 /// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="util.ts"/>
 
 module TabManager {
 
-  export class TabManager {
+  export var TabEvent = {
+    onAddWindow: "onaddwindow",
+    onRemoveWindow: "onremovewindow",
+    onAddTab: "onaddtab",
+    onUpdateTab: "onupdatetab",
+    onCaptureTab: "oncapturetab",
+    onRemoveTab: "onremovetab"
+  };
+
+  export class TabManager extends Util.EventListener {
     activeTabId: number;
     capturing: boolean;
     windows: Window[]; // only manages "normal" type windows
     tabs: Tab[]; // only manages the tabs on "normal" type windows
 
     constructor() {
+      super();
       var query = { windowType: "normal" };
       chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
         this.tabs = chTabs.map((t) => new Tab(t));
@@ -87,6 +98,8 @@ module TabManager {
           tab.url = changeInfo.url || chTab.url || tab.url;
           tab.loading = changeInfo.status === "loading";
 
+          this.fire(TabEvent.onUpdateTab, tab);
+
           this.captureActiveTab();
         }
       });
@@ -107,6 +120,8 @@ module TabManager {
 
       console.log("added window");
       console.log(window);
+
+      this.fire(TabEvent.onAddWindow, window);
     }
 
     removeWindow(windowId: number) : void {
@@ -119,6 +134,8 @@ module TabManager {
 
       console.log("removed window");
       console.log(window);
+
+      this.fire(TabEvent.onRemoveWindow, windowId);
     }
 
     findWindow(id: number) : Window {
@@ -134,6 +151,8 @@ module TabManager {
 
       console.log("added tab");
       console.log(tab);
+
+      this.fire(TabEvent.onAddTab, tab);
     }
 
     captureActiveTab() : void {
@@ -157,6 +176,8 @@ module TabManager {
           tab.snapshot = dataUrl;
           console.log("captured visible tab");
           console.log(tab);
+
+          this.fire(TabEvent.onCaptureTab, tab);
         });
       }
     }
@@ -171,6 +192,8 @@ module TabManager {
 
       console.log("removed tab");
       console.log(tab);
+
+      this.fire(TabEvent.onRemoveTab, tabId);
     }
 
     findTab(id: number) : Tab {
