@@ -8,4 +8,4 @@
  */
 /// <reference path="tab_manager.ts"/>
 
-var tabManager = new TabManager();
+var tabManager = new TabManager.TabManager();
