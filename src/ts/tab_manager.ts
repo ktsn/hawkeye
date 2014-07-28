@@ -6,7 +6,7 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path="../typings/tsd.d.ts"/>
+/// <reference path="../../typings/tsd.d.ts"/>
 
 class TabManager {
   _kSnapshotInterval = 1000 * 60 * 60 * 24 * 7; // 1 week

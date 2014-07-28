@@ -7,7 +7,7 @@
   "author": "katashin",
 
   "background": {
-    "scripts": ["build/background.js"]
+    "scripts": ["js/background.js"]
   },
 
   "permissions": [
