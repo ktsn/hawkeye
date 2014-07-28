@@ -10,7 +10,7 @@
 
 module Util {
 
-  export class EventListener {
+  export class EventTarget {
     listeners: any = {};
 
     on(name: string, callback: Function) : void {

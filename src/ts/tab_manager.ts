@@ -20,7 +20,7 @@ module TabManager {
     onRemoveTab: "onremovetab"
   };
 
-  export class TabManager extends Util.EventListener {
+  export class TabManager extends Util.EventTarget {
     activeTabId: number;
     capturing: boolean;
     windows: Window[]; // only manages "normal" type windows
