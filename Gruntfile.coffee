@@ -35,10 +35,11 @@ module.exports = (grunt) ->
 
     typescript:
       base:
-        src: ["<%= dir.src %>/ts/background.ts"]
-        dest: "<%= dir.dest %>/js/background.js"
-      options:
-        target: 'es5'
+        src: ["<%= dir.src %>/ts/*.ts"]
+        dest: "tmp/"
+        options:
+          module: "amd"
+          target: "es5"
 
     copy:
       html:
@@ -48,9 +49,9 @@ module.exports = (grunt) ->
         dest: "<%= dir.dest %>"
       js:
         expand: true
-        cwd: "<%= dir.src %>"
-        src: ["js/**"]
-        dest: "<%= dir.dest %>"
+        cwd: "tmp/<%= dir.src %>/ts/"
+        src: ["*.js"]
+        dest: "<%= dir.dest %>/js/"
       images:
         expand: true
         cwd: "<%= dir.src %>"
@@ -64,7 +65,9 @@ module.exports = (grunt) ->
 
     clean:
       destFolder:
-        src: '<%= dir.dest %>'
+        src: "<%= dir.dest %>"
+      tmpFolder:
+        src: "tmp/"
 
 
-  grunt.registerTask "default", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:js", "copy:images", "copy:manifest"]
+  grunt.registerTask "default", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:js", "copy:images", "copy:manifest", "clean:tmpFolder"]
