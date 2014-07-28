@@ -9,8 +9,6 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 
 class TabManager {
-  _kSnapshotInterval = 1000 * 60 * 60 * 24 * 7; // 1 week
-
   activeTabId: number;
   capturing: boolean;
   tabs: Tab[];
@@ -78,9 +76,7 @@ class TabManager {
   captureActiveTab() : void {
     var tab = this.findTab(this.activeTabId);
 
-    var now = new Date();
-    var snapshotInterval = now.getTime() - tab.capturedDate.getTime();
-    var shouldCapture = !this.capturing && (snapshotInterval > this._kSnapshotInterval || tab.capturedUrl !== tab.url) && !tab.loading;
+    var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading;
 
     if (shouldCapture) {
       this.capturing = true;
