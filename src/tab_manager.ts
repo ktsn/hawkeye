@@ -86,9 +86,17 @@ class TabManager {
     if (shouldCapture) {
       this.capturing = true;
       console.log("will capture visible tab");
+
       chrome.tabs.captureVisibleTab(null, (dataUrl: string) => {
-        tab.snapshot = dataUrl;
         this.capturing = false;
+
+        // when the browser occurs internal error
+        if (dataUrl == null) {
+          console.log("failed to capture visible tab");
+          return;
+        }
+
+        tab.snapshot = dataUrl;
         console.log("captured visible tab");
         console.log(tab);
       });
