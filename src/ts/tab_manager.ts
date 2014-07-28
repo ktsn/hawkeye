@@ -13,46 +13,119 @@ module TabManager {
   export class TabManager {
     activeTabId: number;
     capturing: boolean;
-    tabs: Tab[];
+    windows: Window[]; // only manages "normal" type windows
+    tabs: Tab[]; // only manages the tabs on "normal" type windows
 
     constructor() {
       var query = { windowType: "normal" };
       chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
-        this.tabs = chTabs.map(function(t) { return new Tab(t) });
-        console.log("--------- initialized tab manager");
+        this.tabs = chTabs.map((t) => new Tab(t));
+        console.log("--------- initialized tabs");
         console.log(this.tabs);
+      });
+
+      chrome.windows.getAll((chWindows: chrome.windows.Window[]) => {
+        var normalWindows = chWindows.filter((w) => w.type === "normal");
+        this.windows = normalWindows.map((w) => new Window(w));
+        console.log("--------- initialized windows");
+        console.log(this.windows);
       });
 
       /*  Event Listeners
        ============================================== */
 
+      /* Windows */
+
+      chrome.windows.onCreated.addListener((chWindow: chrome.windows.Window) => {
+        console.log("\n--------- onWindowCreated");
+        if (chWindow.type === "normal") {
+          this.addWindow(chWindow);
+        }
+      });
+
+      chrome.windows.onRemoved.addListener((windowId: number) => {
+        console.log("\n--------- onWindowRemoved");
+        this.removeWindow(windowId);
+      });
+
+      chrome.windows.onFocusChanged.addListener((windowId: number) => {
+        console.log("\n--------- onWindowFocusChanged");
+        var window = this.findWindow(windowId);
+        if (window != null) {
+          // get the current active tab
+          var query = { active: true, currentWindow: true };
+          chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
+            this.activeTabId = chTabs[0].id;
+            this.captureActiveTab();
+          });
+        }
+      });
+
+      /* Tabs */
+
       chrome.tabs.onCreated.addListener((chTab: chrome.tabs.Tab) => {
-        console.log("\n--------- onCreated");
-        this.addTab(chTab);
+        console.log("\n--------- onTabCreated");
+        var parentWindow = this.findWindow(chTab.windowId);
+        if (parentWindow != null) {
+          this.addTab(chTab);
+        }
       });
 
       chrome.tabs.onRemoved.addListener((tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) => {
-        console.log("\n--------- onRemoved");
-        this.removeTab(tabId);
+        console.log("\n--------- onTabRemoved");
+        var parentWindow = this.findWindow(removeInfo.windowId);
+        if (parentWindow != null) {
+          this.removeTab(tabId);
+        }
       });
 
       chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, chTab: chrome.tabs.Tab) => {
-        console.log("\n--------- onUpdated " + changeInfo.status);
+        console.log("\n--------- onTabUpdated " + changeInfo.status);
+        var tab = this.findTab(tabId);
+        if (tab != null) {
+          tab.title = chTab.title || tab.title;
+          tab.url = changeInfo.url || chTab.url || tab.url;
+          tab.loading = changeInfo.status === "loading";
 
-        this.updateTab(tabId, {
-          title: chTab.title,
-          url: changeInfo.url || chTab.url,
-          loading: changeInfo.status === "loading"
-        });
-
-        this.captureActiveTab();
+          this.captureActiveTab();
+        }
       });
 
       chrome.tabs.onActivated.addListener((activeInfo: chrome.tabs.TabActiveInfo) => {
-        console.log("\n--------- onActivate");
-        this.activeTabId = activeInfo.tabId;
-        this.captureActiveTab();
+        console.log("\n--------- onTabActivate");
+        var parentWindow = this.findWindow(activeInfo.windowId);
+        if (parentWindow != null) {
+          this.activeTabId = activeInfo.tabId;
+          this.captureActiveTab();
+        }
       });
+    }
+
+    addWindow(chWindow: chrome.windows.Window) : void {
+      var window = new Window(chWindow);
+      this.windows.push(window);
+
+      console.log("added window");
+      console.log(window);
+    }
+
+    removeWindow(windowId: number) : void {
+      var window = this.findWindow(windowId);
+      var index = this.windows.indexOf(window);
+
+      if (index === -1) return;
+
+      this.windows.splice(index, 1);
+
+      console.log("removed window");
+      console.log(window);
+    }
+
+    findWindow(id: number) : Window {
+      for (var i = 0, len = this.windows.length; i < len; i++) {
+        if (this.windows[i].id === id) return this.windows[i];
+      }
+      return null;
     }
 
     addTab(chTab: chrome.tabs.Tab) : void {
@@ -60,18 +133,6 @@ module TabManager {
       this.tabs.push(tab);
 
       console.log("added tab");
-      console.log(tab);
-    }
-
-    updateTab(tabId: number, updateParams: any) : void {
-      var tab = this.findTab(tabId);
-      Object.keys(updateParams).forEach((key) => {
-        if (tab[key] !== undefined) {
-          tab[key] = updateParams[key];
-        }
-      });
-
-      console.log("updated tab");
       console.log(tab);
     }
 
@@ -103,6 +164,9 @@ module TabManager {
     removeTab(tabId: number) : void {
       var tab = this.findTab(tabId);
       var index = this.tabs.indexOf(tab);
+
+      if (index === -1) return;
+
       this.tabs.splice(index, 1);
 
       console.log("removed tab");
@@ -117,11 +181,20 @@ module TabManager {
     }
   }
 
+  export class Window {
+    id: number;
+
+    constructor(window: chrome.windows.Window) {
+      this.id = window.id;
+    }
+  }
+
   export class Tab {
     id: number;
     title: string;
     url: string;
     loading: boolean;
+    windowId: number;
 
     private _snapshot: Snapshot;
 
@@ -130,6 +203,7 @@ module TabManager {
       this.title = tab.title;
       this.url = tab.url;
       this.loading = tab.status === "loading";
+      this.windowId = tab.windowId;
       this._snapshot = new Snapshot();
     }
 
@@ -151,9 +225,9 @@ module TabManager {
   }
 
   class Snapshot {
-    _dataUrl: string;
-    _capturedDate: Date;
-    _capturedUrl: string;
+    private _dataUrl: string;
+    private _capturedDate: Date;
+    private _capturedUrl: string;
 
     constructor() {
       this._capturedDate = new Date(0);
