@@ -96,7 +96,9 @@ module TabManager {
         if (tab != null) {
           tab.title = chTab.title || tab.title;
           tab.url = changeInfo.url || chTab.url || tab.url;
-          tab.loading = changeInfo.status === "loading";
+          if (changeInfo.status != null) {
+            tab.loading = changeInfo.status === "loading";
+          }
 
           this.fire(TabEvent.onUpdateTab, tab);
 
