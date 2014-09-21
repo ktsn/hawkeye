@@ -82,7 +82,10 @@ module.exports = (grunt) ->
       css:
         files: "<%= dir.src %>/css/**.css"
         tasks: ["copy:css"]
-      other:
+      library:
+        files: "bower.json"
+        tasks: ["bower"]
+      html:
         files: "<%= dir.src %>/**.html"
         tasks: ["copy:html", "copy:images", "copy:manifest"]
 
