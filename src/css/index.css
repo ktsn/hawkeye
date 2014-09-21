@@ -44,6 +44,18 @@ body {
   background: #fff;
 }
 
+.window-image {
+  background-color: #f0f0f0;
+  height: 100%;
+  width: 100%;
+}
+
+.window-title {
+  bottom: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
 
 /* ==================================================
     Tab
