@@ -51,6 +51,7 @@ class IndexView {
     windowDom.droppable({
       accept: ".tab",
       hoverClass: "window-tab-hover",
+      tolerance: "pointer",
       drop: (event: Event, ui: JQueryUI.DroppableEventUIParam) => {
         var tabDom = ui.draggable;
         var windowDom = $(event.target);
