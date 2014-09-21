@@ -57,7 +57,13 @@ class IndexView {
         var windowDom = $(event.target);
 
         tabManager.moveTab(tabDom.data("id"), windowDom.data("id"));
+        tabDom.remove()
       }
+    });
+
+    windowDom.click((event: JQueryEventObject) => {
+      var windowDom = $(event.currentTarget);
+      this.selectWindow(windowDom.data("id"));
     });
 
     windowDom.data("id", window.id);
@@ -86,6 +92,24 @@ class IndexView {
     if (updates.snapshot !== undefined) {
       windowDom.find(".template-image").attr("src", updates.snapshot);
     }
+  }
+
+  selectWindow(windowId: number) : void {
+    var windowDom = this.windowDomHash[windowId];
+    if (windowDom == null) {
+      return;
+    }
+
+    this.windowWrapper.children().removeClass("window-selected");
+    windowDom.addClass("window-selected");
+
+    // display tabs on the current selected window
+    this.tabWrapper.children().remove();
+    this.tabDomHash = {};
+    var tabs = tabManager.findTabsByWindowId(windowId);
+    tabs.forEach((tab) => {
+      this.addTab(tab);
+    });
   }
 
   addTab(tab: TabManager.Tab) : void {
@@ -137,10 +161,10 @@ $(function() {
 
   tabManager.windows.forEach((w) => {
     view.addWindow(w);
-  });
 
-  tabManager.tabs.forEach((t) => {
-    view.addTab(t);
+    // select the the current focused window
+    var focusWindowId = tabManager.focusWindowId || -1;
+    view.selectWindow(tabManager.focusWindowId);
   });
 
   tabManager.on(TabManager.TabEvent.onAddWindow, (window: TabManager.Window) => {

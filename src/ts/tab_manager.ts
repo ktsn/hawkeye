@@ -23,6 +23,7 @@ module TabManager {
 
   export class TabManager extends Util.EventTarget {
     activeTabId: number;
+    focusWindowId: number;
     capturing: boolean;
     windows: Window[]; // only manages "normal" type windows
     tabs: Tab[]; // only manages the tabs on "normal" type windows
@@ -62,6 +63,8 @@ module TabManager {
 
       chrome.windows.onFocusChanged.addListener((windowId: number) => {
         console.log("\n--------- onWindowFocusChanged");
+        this.focusWindowId = windowId;
+
         var window = this.findWindow(windowId);
         if (window != null) {
           // get the current active tab
@@ -207,6 +210,10 @@ module TabManager {
         if (this.tabs[i].id === id) return this.tabs[i];
       }
       return null;
+    }
+
+    findTabsByWindowId(windowId: number) : Tab[] {
+      return this.tabs.filter((tab) => tab.windowId === windowId);
     }
 
     moveTab(tabId: number, toWindowId: number) : void {
