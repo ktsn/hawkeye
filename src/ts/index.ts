@@ -41,6 +41,19 @@ class IndexView {
 
   addWindow(window: TabManager.Window) : void {
     var windowDom = this.windowTemplate.clone();
+
+    // be droppable to move tabs to the window
+    windowDom.droppable({
+      accept: ".tab",
+      hoverClass: "window-tab-hover",
+      drop: function(event, ui) {
+        var tabDom = ui.draggable;
+        var windowDom = $(event.target);
+
+        tabManager.moveTab(tabDom.data("id"), windowDom.data("id"));
+      }
+    });
+
     windowDom.data("id", window.id);
 
     this.windowWrapper.append(windowDom);
@@ -56,6 +69,16 @@ class IndexView {
 
   addTab(tab: TabManager.Tab) : void {
     var tabDom = this.tabTemplate.clone();
+
+    // be draggable the tab to move to any windows
+    tabDom.draggable({
+      opacity: 0.7,
+      revert: true,
+      revertDuration: 300,
+      scroll: false,
+      stack: ".tab"
+    });
+
     tabDom.data("id", tab.id);
     tabDom.find(".template-image").attr("src", tab.snapshot);
     tabDom.find(".template-title").text(tab.title);
