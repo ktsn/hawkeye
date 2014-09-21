@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="css/index.css"/>
   <script src="lib/jquery/jquery.js"></script>
   <script src="js/util.js"></script>
@@ -9,7 +10,7 @@
   <title>TabManager</title>
 </head>
 <body>
-<nav id="window-wrapper"></nav>
+<nav id="window-wrapper" class="clearfix"></nav>
 <div id="tab-wrapper"></div>
 
 <script id="tab-template" type="text/template">
@@ -20,7 +21,10 @@
 </script>
 
 <script id="window-template" type="text/template">
-  <div class="window image-wrapper"><img class="template-image"/></div>
+  <article class="window">
+    <div class="window-image image-wrapper"><img class="template-image"/></div>
+    <div class="window-title template-title">テスト</div>
+  </article>
 </script>
 
 </body>
