@@ -80,7 +80,7 @@ module.exports = (grunt) ->
         files: "<%= dir.src %>/ts/**.ts"
         tasks: ["typescript", "copy:js", "clean:tmpFolder"]
       css:
-        files: "<%= dir.src %>/**.css"
+        files: "<%= dir.src %>/css/**.css"
         tasks: ["copy:css"]
       other:
         files: "<%= dir.src %>/**.html"
