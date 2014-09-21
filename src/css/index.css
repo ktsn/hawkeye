@@ -73,13 +73,15 @@ body {
     Tab
    ================================================== */
 
-.tab-wrapper {
+#tab-wrapper {
   padding: 10px 0 0;
+  text-align: center;
 }
 
 .tab {
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-  margin: 5px;
+  display: inline-block;
+  margin: 15px;
   height: 300px;
   position: relative;
   width: 400px;
