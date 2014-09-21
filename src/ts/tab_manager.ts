@@ -16,6 +16,7 @@ module TabManager {
     onRemoveWindow: "onremovewindow",
     onAddTab: "onaddtab",
     onUpdateTab: "onupdatetab",
+    onActivateTab: "onactivatetab",
     onCaptureTab: "oncapturetab",
     onRemoveTab: "onremovetab"
   };
@@ -109,8 +110,11 @@ module TabManager {
       chrome.tabs.onActivated.addListener((activeInfo: chrome.tabs.TabActiveInfo) => {
         console.log("\n--------- onTabActivate");
         var parentWindow = this.findWindow(activeInfo.windowId);
+        var tab = this.findTab(activeInfo.tabId);
         if (parentWindow != null) {
           this.activeTabId = activeInfo.tabId;
+          this.fire(TabEvent.onActivateTab, tab);
+
           this.captureActiveTab();
         }
       });

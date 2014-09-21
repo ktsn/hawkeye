@@ -15,6 +15,11 @@ var tabManager: TabManager.TabManager = backgroundWindow.tabManager;
 /*  Interfaces
    =============================================== */
 
+interface WindowUpdateOption {
+  title?: string;
+  snapshot?: string;
+}
+
 interface TabUpdateOption {
   title?: string;
   snapshot?: string;
@@ -54,6 +59,21 @@ class IndexView {
     delete this.windowDomHash[windowId];
   }
 
+  updateWindow(windowId: number, updates: WindowUpdateOption) : void {
+    var windowDom = this.windowDomHash[windowId];
+
+    if (windowDom == null) {
+      return;
+    }
+
+    if (updates.title !== undefined) {
+      windowDom.find(".template-title").text(updates.title);
+    }
+    if (updates.snapshot !== undefined) {
+      windowDom.find(".template-image").attr("src", updates.snapshot);
+    }
+  }
+
   addTab(tab: TabManager.Tab) : void {
     var tabDom = this.tabTemplate.clone();
     tabDom.data("id", tab.id);
@@ -71,16 +91,16 @@ class IndexView {
   }
 
   updateTab(tabId: number, updates: TabUpdateOption) : void {
-    var tab = this.tabDomHash[tabId];
-    if (tab == null) {
+    var tabDom = this.tabDomHash[tabId];
+    if (tabDom == null) {
       return;
     }
 
     if (updates.title !== undefined) {
-      tab.find(".template-title").text(updates.title);
+      tabDom.find(".template-title").text(updates.title);
     }
     if (updates.snapshot !== undefined) {
-      tab.find(".template-image").attr("src", updates.snapshot);
+      tabDom.find(".template-image").attr("src", updates.snapshot);
     }
   }
 }
@@ -118,10 +138,16 @@ $(function() {
   tabManager.on(TabManager.TabEvent.onCaptureTab, (tab: TabManager.Tab) => {
     console.log("----- capture tab");
     view.updateTab(tab.id, { snapshot: tab.snapshot });
+    view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   });
 
   tabManager.on(TabManager.TabEvent.onUpdateTab, (tab: TabManager.Tab) => {
     console.log("----- update tab");
     view.updateTab(tab.id, { title: tab.title, snapshot:tab.snapshot });
+  });
+
+  tabManager.on(TabManager.TabEvent.onActivateTab, (tab: TabManager.Tab) => {
+    console.log("----- activate tab");
+    view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   });
 });
