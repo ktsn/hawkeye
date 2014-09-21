@@ -1,3 +1,49 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
 body {
   background-color: #eee;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.image-wrapper > img {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* ==================================================
+    Tab
+   ================================================== */
+
+.tab {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  margin: 5px;
+  height: 300px;
+  position: relative;
+  width: 400px;
+}
+
+.tab-image {
+  background-color: #f0f0f0;
+  height: 100%;
+  width: 100%;
+}
+
+.tab-title {
+  bottom: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
 }
