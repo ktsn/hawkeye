@@ -14,6 +14,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-typescript"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-clean"
+  grunt.loadNpmTasks "grunt-contrib-watch"
 
   grunt.initConfig
     dir:
@@ -69,5 +70,13 @@ module.exports = (grunt) ->
       tmpFolder:
         src: "tmp/"
 
+    watch:
+      typescript:
+        files: "<%= dir.src %>/ts/**.ts"
+        tasks: ["typescript", "copy:js", "clean:tmpFolder"]
+      other:
+        files: "<%= dir.src %>/**.html"
+        tasks: ["copy:html", "copy:images", "copy:manifest"]
 
-  grunt.registerTask "default", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:js", "copy:images", "copy:manifest", "clean:tmpFolder"]
+  grunt.registerTask "default", ["watch"]
+  grunt.registerTask "build", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:js", "copy:images", "copy:manifest", "clean:tmpFolder"]
