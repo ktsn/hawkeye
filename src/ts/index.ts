@@ -12,6 +12,14 @@
 var backgroundWindow: any = chrome.extension.getBackgroundPage();
 var tabManager: TabManager.TabManager = backgroundWindow.tabManager;
 
+/*  Interfaces
+   =============================================== */
+
+interface TabUpdateOption {
+  title?: string;
+  snapshot?: string;
+}
+
 /*  View
    =============================================== */
 
@@ -61,6 +69,20 @@ class IndexView {
     tabDom.remove();
     delete this.tabDomHash[tabId];
   }
+
+  updateTab(tabId: number, updates: TabUpdateOption) : void {
+    var tab = this.tabDomHash[tabId];
+    if (tab == null) {
+      return;
+    }
+
+    if (updates.title !== undefined) {
+      tab.find(".template-title").text(updates.title);
+    }
+    if (updates.snapshot !== undefined) {
+      tab.find(".template-image").attr("src", updates.snapshot);
+    }
+  }
 }
 
 /*  Controller
@@ -94,10 +116,12 @@ $(function() {
   });
 
   tabManager.on(TabManager.TabEvent.onCaptureTab, (tab: TabManager.Tab) => {
-
+    console.log("----- capture tab");
+    view.updateTab(tab.id, { snapshot: tab.snapshot });
   });
 
   tabManager.on(TabManager.TabEvent.onUpdateTab, (tab: TabManager.Tab) => {
-
+    console.log("----- update tab");
+    view.updateTab(tab.id, { title: tab.title, snapshot:tab.snapshot });
   });
 });
