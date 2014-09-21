@@ -204,6 +204,10 @@ module TabManager {
       }
       return null;
     }
+
+    moveTab(tabId: number, toWindowId: number) {
+      chrome.tabs.move(tabId, { windowId: toWindowId, index: -1 }); // always add to the end of the window
+    }
   }
 
   export class Window {
