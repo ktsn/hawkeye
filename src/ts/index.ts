@@ -124,6 +124,10 @@ class IndexView {
       stack: ".tab"
     });
 
+    tabDom.on('click', '.tab-remove-btn', (event: JQueryEventObject) => {
+      chrome.tabs.remove(tab.id)
+    });
+
     tabDom.data("id", tab.id);
     tabDom.find(".template-image").attr("src", tab.snapshot);
     tabDom.find(".template-title").text(tab.title);
