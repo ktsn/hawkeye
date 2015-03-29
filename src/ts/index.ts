@@ -6,8 +6,8 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="tab_manager.ts"/>
+/// <reference path='../../typings/tsd.d.ts'/>
+/// <reference path='tab_manager.ts'/>
 
 var backgroundWindow: any = chrome.extension.getBackgroundPage();
 var tabManager: TabManager.TabManager = backgroundWindow.tabManager;
@@ -38,10 +38,10 @@ class IndexView {
   tabDomHash: any = {};
 
   constructor() {
-    this.windowWrapper = $("#window-wrapper");
-    this.tabWrapper = $("#tab-wrapper");
-    this.windowTemplate = $($("#window-template").html());
-    this.tabTemplate = $($("#tab-template").html());
+    this.windowWrapper = $('#window-wrapper');
+    this.tabWrapper = $('#tab-wrapper');
+    this.windowTemplate = $($('#window-template').html());
+    this.tabTemplate = $($('#tab-template').html());
   }
 
   addWindow(window: TabManager.Window) : void {
@@ -49,24 +49,24 @@ class IndexView {
 
     // be droppable to move tabs to the window
     windowDom.droppable({
-      accept: ".tab",
-      hoverClass: "window-tab-hover",
-      tolerance: "pointer",
+      accept: '.tab',
+      hoverClass: 'window-tab-hover',
+      tolerance: 'pointer',
       drop: (event: Event, ui: JQueryUI.DroppableEventUIParam) => {
         var tabDom = ui.draggable;
         var windowDom = $(event.target);
 
-        tabManager.moveTab(tabDom.data("id"), windowDom.data("id"));
+        tabManager.moveTab(tabDom.data('id'), windowDom.data('id'));
         tabDom.remove()
       }
     });
 
     windowDom.click((event: JQueryEventObject) => {
       var windowDom = $(event.currentTarget);
-      this.selectWindow(windowDom.data("id"));
+      this.selectWindow(windowDom.data('id'));
     });
 
-    windowDom.data("id", window.id);
+    windowDom.data('id', window.id);
 
     this.windowWrapper.append(windowDom);
 
@@ -87,10 +87,10 @@ class IndexView {
     }
 
     if (updates.title !== undefined) {
-      windowDom.find(".template-title").text(updates.title);
+      windowDom.find('.template-title').text(updates.title);
     }
     if (updates.snapshot !== undefined) {
-      windowDom.find(".template-image").css("background-image", "url(" + updates.snapshot + ")");
+      windowDom.find('.template-image').css('background-image', 'url(' + updates.snapshot + ')');
     }
   }
 
@@ -100,8 +100,8 @@ class IndexView {
       return;
     }
 
-    this.windowWrapper.children().removeClass("window-selected");
-    windowDom.addClass("window-selected");
+    this.windowWrapper.children().removeClass('window-selected');
+    windowDom.addClass('window-selected');
 
     // display tabs on the current selected window
     this.tabWrapper.children().remove();
@@ -121,16 +121,16 @@ class IndexView {
       revert: true,
       revertDuration: 300,
       scroll: false,
-      stack: ".tab"
+      stack: '.tab'
     });
 
     tabDom.on('click', '.tab-remove-btn', (event: JQueryEventObject) => {
       chrome.tabs.remove(tab.id)
     });
 
-    tabDom.data("id", tab.id);
-    tabDom.find(".template-image").css("background-image", "url(" + tab.snapshot + ")");
-    tabDom.find(".template-title").text(tab.title);
+    tabDom.data('id', tab.id);
+    tabDom.find('.template-image').css('background-image', 'url(' + tab.snapshot + ')');
+    tabDom.find('.template-title').text(tab.title);
     this.tabWrapper.append(tabDom);
 
     this.tabDomHash[tab.id] = tabDom;
@@ -149,10 +149,10 @@ class IndexView {
     }
 
     if (updates.title !== undefined) {
-      tabDom.find(".template-title").text(updates.title);
+      tabDom.find('.template-title').text(updates.title);
     }
     if (updates.snapshot !== undefined) {
-      tabDom.find(".template-image").css("background-image", "url(" + updates.snapshot + ")");
+      tabDom.find('.template-image').css('background-image', 'url(' + updates.snapshot + ')');
     }
   }
 }
@@ -188,18 +188,18 @@ $(function() {
   });
 
   tabManager.on(TabManager.TabEvent.onCaptureTab, (tab: TabManager.Tab) => {
-    console.log("----- capture tab");
+    console.log('----- capture tab');
     view.updateTab(tab.id, { snapshot: tab.snapshot });
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   });
 
   tabManager.on(TabManager.TabEvent.onUpdateTab, (tab: TabManager.Tab) => {
-    console.log("----- update tab");
+    console.log('----- update tab');
     view.updateTab(tab.id, { title: tab.title, snapshot:tab.snapshot });
   });
 
   tabManager.on(TabManager.TabEvent.onActivateTab, (tab: TabManager.Tab) => {
-    console.log("----- activate tab");
+    console.log('----- activate tab');
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   });
 });

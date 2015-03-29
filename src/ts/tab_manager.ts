@@ -6,41 +6,41 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="util.ts"/>
+/// <reference path='../../typings/tsd.d.ts'/>
+/// <reference path='util.ts'/>
 
 module TabManager {
 
   export var TabEvent = {
-    onAddWindow: "onaddwindow",
-    onRemoveWindow: "onremovewindow",
-    onAddTab: "onaddtab",
-    onUpdateTab: "onupdatetab",
-    onActivateTab: "onactivatetab",
-    onCaptureTab: "oncapturetab",
-    onRemoveTab: "onremovetab"
+    onAddWindow: 'onaddwindow',
+    onRemoveWindow: 'onremovewindow',
+    onAddTab: 'onaddtab',
+    onUpdateTab: 'onupdatetab',
+    onActivateTab: 'onactivatetab',
+    onCaptureTab: 'oncapturetab',
+    onRemoveTab: 'onremovetab'
   };
 
   export class TabManager extends Util.EventTarget {
     activeTabId: number;
     focusWindowId: number;
     capturing: boolean;
-    windows: Window[]; // only manages "normal" type windows
-    tabs: Tab[]; // only manages the tabs on "normal" type windows
+    windows: Window[]; // only manages 'normal' type windows
+    tabs: Tab[]; // only manages the tabs on 'normal' type windows
 
     constructor() {
       super();
-      var query = { windowType: "normal" };
+      var query = { windowType: 'normal' };
       chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
         this.tabs = chTabs.map((t) => new Tab(t));
-        console.log("--------- initialized tabs");
+        console.log('--------- initialized tabs');
         console.log(this.tabs);
       });
 
       chrome.windows.getAll((chWindows: chrome.windows.Window[]) => {
-        var normalWindows = chWindows.filter((w) => w.type === "normal");
+        var normalWindows = chWindows.filter((w) => w.type === 'normal');
         this.windows = normalWindows.map((w) => new Window(w));
-        console.log("--------- initialized windows");
+        console.log('--------- initialized windows');
         console.log(this.windows);
       });
 
@@ -50,19 +50,19 @@ module TabManager {
       /* Windows */
 
       chrome.windows.onCreated.addListener((chWindow: chrome.windows.Window) => {
-        console.log("\n--------- onWindowCreated");
-        if (chWindow.type === "normal") {
+        console.log('\n--------- onWindowCreated');
+        if (chWindow.type === 'normal') {
           this.addWindow(chWindow);
         }
       });
 
       chrome.windows.onRemoved.addListener((windowId: number) => {
-        console.log("\n--------- onWindowRemoved");
+        console.log('\n--------- onWindowRemoved');
         this.removeWindow(windowId);
       });
 
       chrome.windows.onFocusChanged.addListener((windowId: number) => {
-        console.log("\n--------- onWindowFocusChanged");
+        console.log('\n--------- onWindowFocusChanged');
         this.focusWindowId = windowId;
 
         var window = this.findWindow(windowId);
@@ -79,7 +79,7 @@ module TabManager {
       /* Tabs */
 
       chrome.tabs.onCreated.addListener((chTab: chrome.tabs.Tab) => {
-        console.log("\n--------- onTabCreated");
+        console.log('\n--------- onTabCreated');
         var parentWindow = this.findWindow(chTab.windowId);
         if (parentWindow != null) {
           this.addTab(chTab);
@@ -87,7 +87,7 @@ module TabManager {
       });
 
       chrome.tabs.onRemoved.addListener((tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) => {
-        console.log("\n--------- onTabRemoved");
+        console.log('\n--------- onTabRemoved');
         var parentWindow = this.findWindow(removeInfo.windowId);
         if (parentWindow != null) {
           this.removeTab(tabId);
@@ -95,13 +95,13 @@ module TabManager {
       });
 
       chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, chTab: chrome.tabs.Tab) => {
-        console.log("\n--------- onTabUpdated " + changeInfo.status);
+        console.log('\n--------- onTabUpdated ' + changeInfo.status);
         var tab = this.findTab(tabId);
         if (tab != null) {
           tab.title = chTab.title || tab.title;
           tab.url = changeInfo.url || chTab.url || tab.url;
           if (changeInfo.status != null) {
-            tab.loading = changeInfo.status === "loading";
+            tab.loading = changeInfo.status === 'loading';
           }
 
           this.fire(TabEvent.onUpdateTab, tab);
@@ -111,7 +111,7 @@ module TabManager {
       });
 
       chrome.tabs.onActivated.addListener((activeInfo: chrome.tabs.TabActiveInfo) => {
-        console.log("\n--------- onTabActivate");
+        console.log('\n--------- onTabActivate');
         var parentWindow = this.findWindow(activeInfo.windowId);
         var tab = this.findTab(activeInfo.tabId);
         if (parentWindow != null) {
@@ -127,7 +127,7 @@ module TabManager {
       var window = new Window(chWindow);
       this.windows.push(window);
 
-      console.log("added window");
+      console.log('added window');
       console.log(window);
 
       this.fire(TabEvent.onAddWindow, window);
@@ -141,7 +141,7 @@ module TabManager {
 
       this.windows.splice(index, 1);
 
-      console.log("removed window");
+      console.log('removed window');
       console.log(window);
 
       this.fire(TabEvent.onRemoveWindow, windowId);
@@ -158,7 +158,7 @@ module TabManager {
       var tab = new Tab(chTab);
       this.tabs.push(tab);
 
-      console.log("added tab");
+      console.log('added tab');
       console.log(tab);
 
       this.fire(TabEvent.onAddTab, tab);
@@ -171,19 +171,19 @@ module TabManager {
 
       if (shouldCapture) {
         this.capturing = true;
-        console.log("will capture visible tab");
+        console.log('will capture visible tab');
 
         chrome.tabs.captureVisibleTab(null, (dataUrl: string) => {
           this.capturing = false;
 
           // when the browser occurs internal error
           if (dataUrl == null) {
-            console.log("failed to capture visible tab");
+            console.log('failed to capture visible tab');
             return;
           }
 
           tab.snapshot = dataUrl;
-          console.log("captured visible tab");
+          console.log('captured visible tab');
           console.log(tab);
 
           this.fire(TabEvent.onCaptureTab, tab);
@@ -199,7 +199,7 @@ module TabManager {
 
       this.tabs.splice(index, 1);
 
-      console.log("removed tab");
+      console.log('removed tab');
       console.log(tab);
 
       this.fire(TabEvent.onRemoveTab, tabId);
@@ -217,7 +217,7 @@ module TabManager {
     }
 
     moveTab(tabId: number, toWindowId: number) : void {
-      console.log("------ move tab(" + tabId + ") to window(" + toWindowId + ")");
+      console.log('------ move tab(' + tabId + ') to window(' + toWindowId + ')');
 
       chrome.tabs.move(tabId, { windowId: toWindowId, index: -1 }, (chTab: chrome.tabs.Tab) => { // always add to the end of the window
         var tab = this.findTab(tabId);
@@ -247,7 +247,7 @@ module TabManager {
       this.id = tab.id;
       this.title = tab.title;
       this.url = tab.url;
-      this.loading = tab.status === "loading";
+      this.loading = tab.status === 'loading';
       this.windowId = tab.windowId;
       this._snapshot = new Snapshot();
     }
