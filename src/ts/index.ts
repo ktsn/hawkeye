@@ -90,7 +90,7 @@ class IndexView {
       windowDom.find(".template-title").text(updates.title);
     }
     if (updates.snapshot !== undefined) {
-      windowDom.find(".template-image").attr("src", updates.snapshot);
+      windowDom.find(".template-image").css("background-image", "url(" + updates.snapshot + ")");
     }
   }
 
@@ -106,7 +106,7 @@ class IndexView {
     // display tabs on the current selected window
     this.tabWrapper.children().remove();
     this.tabDomHash = {};
-    var tabs = tabManager.findTabsByWindowId(windowId);
+    var tabs: TabManager.Tab[] = tabManager.findTabsByWindowId(windowId);
     tabs.forEach((tab) => {
       this.addTab(tab);
     });
@@ -129,7 +129,7 @@ class IndexView {
     });
 
     tabDom.data("id", tab.id);
-    tabDom.find(".template-image").attr("src", tab.snapshot);
+    tabDom.find(".template-image").css("background-image", "url(" + tab.snapshot + ")");
     tabDom.find(".template-title").text(tab.title);
     this.tabWrapper.append(tabDom);
 
@@ -152,7 +152,7 @@ class IndexView {
       tabDom.find(".template-title").text(updates.title);
     }
     if (updates.snapshot !== undefined) {
-      tabDom.find(".template-image").attr("src", updates.snapshot);
+      tabDom.find(".template-image").css("background-image", "url(" + updates.snapshot + ")");
     }
   }
 }
@@ -168,7 +168,7 @@ $(function() {
 
     // select the the current focused window
     var focusWindowId = tabManager.focusWindowId || -1;
-    view.selectWindow(tabManager.focusWindowId);
+    view.selectWindow(focusWindowId);
   });
 
   tabManager.on(TabManager.TabEvent.onAddWindow, (window: TabManager.Window) => {
