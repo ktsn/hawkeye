@@ -37,6 +37,8 @@ class IndexView {
   windowDomHash: any = {};
   tabDomHash: any = {};
 
+  selectedWindowId: number = -1;
+
   constructor() {
     this.windowWrapper = $('#window-wrapper');
     this.tabWrapper = $('#tab-wrapper');
@@ -99,6 +101,7 @@ class IndexView {
     if (windowDom == null) {
       return;
     }
+    this.selectedWindowId = windowId;
 
     this.windowWrapper.children().removeClass('window-selected');
     windowDom.addClass('window-selected');
@@ -131,7 +134,10 @@ class IndexView {
     tabDom.data('id', tab.id);
     tabDom.find('.template-image').css('background-image', 'url(' + tab.snapshot + ')');
     tabDom.find('.template-title').text(tab.title);
-    this.tabWrapper.append(tabDom);
+
+    if (this.selectedWindowId === tab.windowId) {
+      this.tabWrapper.append(tabDom);
+    }
 
     this.tabDomHash[tab.id] = tabDom;
   }
