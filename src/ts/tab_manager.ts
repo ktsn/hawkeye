@@ -21,7 +21,7 @@ module TabManager {
     onRemoveTab: 'onremovetab'
   };
 
-  export class TabManager extends Util.EventTarget {
+  export class TabManager extends Util.Observable {
     activeTabId: number;
     focusWindowId: number;
     capturing: boolean;
