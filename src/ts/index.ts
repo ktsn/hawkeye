@@ -167,6 +167,10 @@ class IndexView {
    =============================================== */
 
 $(function() {
+
+  /*  Initialize
+   * ================================================ */
+
   var view = new IndexView();
 
   tabManager.windows.forEach((w) => {
@@ -177,35 +181,62 @@ $(function() {
     view.selectWindow(focusWindowId);
   });
 
-  tabManager.on(TabManager.TabEvent.onAddWindow, (window: TabManager.Window) => {
+  /*  remove event listeners when the page is closed
+   * ================================================ */
+
+   $(window).on('unload', function() {
+     tabManager.off(TabManager.TabEvent.onAddWindow, onAddWindow);
+     tabManager.off(TabManager.TabEvent.onRemoveWindow, onRemoveWindow);
+     tabManager.off(TabManager.TabEvent.onAddTab, onAddTab);
+     tabManager.off(TabManager.TabEvent.onRemoveTab, onRemoveTab);
+     tabManager.off(TabManager.TabEvent.onCaptureTab, onCaptureTab);
+     tabManager.off(TabManager.TabEvent.onUpdateTab, onUpdateTab);
+     tabManager.off(TabManager.TabEvent.onActivateTab, onActivateTab);
+   });
+
+  /*  Event Listeners
+   * ================================================ */
+
+  tabManager.on(TabManager.TabEvent.onAddWindow, onAddWindow);
+  tabManager.on(TabManager.TabEvent.onRemoveWindow, onRemoveWindow);
+  tabManager.on(TabManager.TabEvent.onAddTab, onAddTab);
+  tabManager.on(TabManager.TabEvent.onRemoveTab, onRemoveTab);
+  tabManager.on(TabManager.TabEvent.onCaptureTab, onCaptureTab);
+  tabManager.on(TabManager.TabEvent.onUpdateTab, onUpdateTab);
+  tabManager.on(TabManager.TabEvent.onActivateTab, onActivateTab);
+
+  /*  Event Listeners Implementation
+   * ================================================ */
+
+  function onAddWindow(window: TabManager.Window) {
     view.addWindow(window);
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onRemoveWindow, (windowId: number) => {
+  function onRemoveWindow(windowId: number) {
     view.removeWindow(windowId);
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onAddTab, (tab: TabManager.Tab) => {
+  function onAddTab(tab: TabManager.Tab) {
     view.addTab(tab);
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onRemoveTab, (tabId: number) => {
+  function onRemoveTab(tabId: number) {
     view.removeTab(tabId);
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onCaptureTab, (tab: TabManager.Tab) => {
+  function onCaptureTab(tab: TabManager.Tab) {
     console.log('----- capture tab');
     view.updateTab(tab.id, { snapshot: tab.snapshot });
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onUpdateTab, (tab: TabManager.Tab) => {
+  function onUpdateTab(tab: TabManager.Tab) {
     console.log('----- update tab');
     view.updateTab(tab.id, { title: tab.title, snapshot:tab.snapshot });
-  });
+  }
 
-  tabManager.on(TabManager.TabEvent.onActivateTab, (tab: TabManager.Tab) => {
+  function onActivateTab(tab: TabManager.Tab) {
     console.log('----- activate tab');
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
-  });
+  }
 });

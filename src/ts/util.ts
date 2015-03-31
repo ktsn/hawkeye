@@ -20,8 +20,20 @@ module Util {
       this.listeners[name].push(callback);
     }
 
-    off(name: string) : void {
-      this.listeners[name] = null;
+    off(name: string, callback: Function = null) : void {
+      if (callback === null) {
+        this.listeners[name] = null;
+        return;
+      }
+
+      if (this.listeners[name] == null) {
+        return;
+      }
+
+      // remove only the given event listener
+      this.listeners[name] = this.listeners[name].filter((listener) => {
+        return listener !== callback;
+      });
     }
 
     fire(name: string, data: any) : void {
