@@ -9,6 +9,9 @@
 /// <reference path='../../typings/tsd.d.ts'/>
 /// <reference path='tab_manager.ts'/>
 
+var DEFAULT_TAB_WIDTH = 400;
+var TAB_HEIGHT_PER_WIDTH = 3 / 4;
+
 var backgroundWindow: any = chrome.extension.getBackgroundPage();
 var tabManager: TabManager.TabManager = backgroundWindow.tabManager;
 
@@ -38,6 +41,7 @@ class IndexView {
   tabDomHash: any = {};
 
   selectedWindowId: number = -1;
+  currentTabWidth: number = DEFAULT_TAB_WIDTH;
 
   constructor() {
     this.windowWrapper = $('#window-wrapper');
@@ -134,6 +138,7 @@ class IndexView {
     tabDom.data('id', tab.id);
     tabDom.find('.template-image').css('background-image', 'url(' + tab.snapshot + ')');
     tabDom.find('.template-title').text(tab.title);
+    this.resizeTab(tabDom, this.currentTabWidth);
 
     if (this.selectedWindowId === tab.windowId) {
       this.tabWrapper.append(tabDom);
@@ -161,6 +166,17 @@ class IndexView {
       tabDom.find('.template-image').css('background-image', 'url(' + updates.snapshot + ')');
     }
   }
+
+  resizeTabs(width: number) : void {
+    Object.keys(this.tabDomHash).forEach((tabId: string) => {
+      this.resizeTab(this.tabDomHash[tabId], width);
+    });
+  }
+
+  private resizeTab(tab: JQuery, width: number) : void {
+    tab.width(width);
+    tab.height(width * TAB_HEIGHT_PER_WIDTH);
+  }
 }
 
 /*  Controller
@@ -179,6 +195,10 @@ $(function() {
     // select the the current focused window
     var focusWindowId = tabManager.focusWindowId || -1;
     view.selectWindow(focusWindowId);
+  });
+
+  $('#tab-size-input').on('input', (event: any) => {
+    view.resizeTabs(event.target.value);
   });
 
   /*  remove event listeners when the page is closed
