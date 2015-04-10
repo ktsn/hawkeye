@@ -10,10 +10,52 @@ body {
   padding: 122px 0 0;
 }
 
+/* ==================================================
+    Common
+   ================================================== */
+
 .image-cover {
   background-position: left top;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.float-btn {
+  background-color: transparent;
+  border-width: 0;
+  font-size: 28px;
+  text-shadow: 1px 1px 1px #fff,
+               1px -1px 1px #fff,
+               -1px 1px 1px #fff,
+               -1px -1px 1px #fff;
+  color: #333;
+  padding: 5px 10px;
+}
+
+.float-btn:active {
+  color: #006fee;
+  text-shadow: 1px 1px 1px #0cf,
+               1px -1px 1px #0cf,
+               -1px 1px 1px #0cf,
+               -1px -1px 1px #0cf;
+}
+
+.btn-close::before {
+  bottom: 7px;
+  content: "\d7";
+  position: relative;
+}
+
+.float-controller {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.tab:hover .float-controller,
+.window:hover .float-controller {
+  display: block;
 }
 
 /* ==================================================
@@ -101,12 +143,6 @@ body {
 
 .tab.ui-draggable-dragging {
   z-index: 2000 !important;
-}
-
-.tab-remove-btn {
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 #controller {

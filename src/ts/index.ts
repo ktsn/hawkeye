@@ -67,6 +67,10 @@ class IndexView {
       }
     });
 
+    windowDom.on('click', '.window-remove-btn', (event: JQueryEventObject) => {
+      chrome.windows.remove(window.id);
+    });
+
     windowDom.click((event: JQueryEventObject) => {
       var windowDom = $(event.currentTarget);
       this.selectWindow(windowDom.data('id'));
