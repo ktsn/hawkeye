@@ -9,7 +9,7 @@
 /// <reference path='../../typings/tsd.d.ts'/>
 /// <reference path='tab_manager.ts'/>
 
-var tabManager = new TabManager.TabManager();
+var tabManager = new Hawkeye.TabManager();
 
 chrome.browserAction.onClicked.addListener((tab: chrome.tabs.Tab) => {
   chrome.tabs.create({

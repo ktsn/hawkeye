@@ -13,7 +13,7 @@ var DEFAULT_TAB_WIDTH = 400;
 var TAB_HEIGHT_PER_WIDTH = 3 / 4;
 
 var backgroundWindow: any = chrome.extension.getBackgroundPage();
-var tabManager: TabManager.TabManager = backgroundWindow.tabManager;
+var tabManager: Hawkeye.TabManager = backgroundWindow.tabManager;
 
 /*  Interfaces
    =============================================== */
@@ -50,7 +50,7 @@ class IndexView {
     this.tabTemplate = $($('#tab-template').html());
   }
 
-  addWindow(window: TabManager.Window) : void {
+  addWindow(window: Hawkeye.Window) : void {
     var windowDom = this.windowTemplate.clone();
 
     // be droppable to move tabs to the window
@@ -117,13 +117,13 @@ class IndexView {
     // display tabs on the current selected window
     this.tabWrapper.children().remove();
     this.tabDomHash = {};
-    var tabs: TabManager.Tab[] = tabManager.findTabsByWindowId(windowId);
+    var tabs: Hawkeye.Tab[] = tabManager.findTabsByWindowId(windowId);
     tabs.forEach((tab) => {
       this.addTab(tab);
     });
   }
 
-  addTab(tab: TabManager.Tab) : void {
+  addTab(tab: Hawkeye.Tab) : void {
     var tabDom = this.tabTemplate.clone();
 
     // be draggable the tab to move to any windows
@@ -209,30 +209,30 @@ $(function() {
    * ================================================ */
 
    $(window).on('unload', function() {
-     tabManager.off(TabManager.TabEvent.onAddWindow, onAddWindow);
-     tabManager.off(TabManager.TabEvent.onRemoveWindow, onRemoveWindow);
-     tabManager.off(TabManager.TabEvent.onAddTab, onAddTab);
-     tabManager.off(TabManager.TabEvent.onRemoveTab, onRemoveTab);
-     tabManager.off(TabManager.TabEvent.onCaptureTab, onCaptureTab);
-     tabManager.off(TabManager.TabEvent.onUpdateTab, onUpdateTab);
-     tabManager.off(TabManager.TabEvent.onActivateTab, onActivateTab);
+     tabManager.off(Hawkeye.TabEvent.onAddWindow, onAddWindow);
+     tabManager.off(Hawkeye.TabEvent.onRemoveWindow, onRemoveWindow);
+     tabManager.off(Hawkeye.TabEvent.onAddTab, onAddTab);
+     tabManager.off(Hawkeye.TabEvent.onRemoveTab, onRemoveTab);
+     tabManager.off(Hawkeye.TabEvent.onCaptureTab, onCaptureTab);
+     tabManager.off(Hawkeye.TabEvent.onUpdateTab, onUpdateTab);
+     tabManager.off(Hawkeye.TabEvent.onActivateTab, onActivateTab);
    });
 
   /*  Event Listeners
    * ================================================ */
 
-  tabManager.on(TabManager.TabEvent.onAddWindow, onAddWindow);
-  tabManager.on(TabManager.TabEvent.onRemoveWindow, onRemoveWindow);
-  tabManager.on(TabManager.TabEvent.onAddTab, onAddTab);
-  tabManager.on(TabManager.TabEvent.onRemoveTab, onRemoveTab);
-  tabManager.on(TabManager.TabEvent.onCaptureTab, onCaptureTab);
-  tabManager.on(TabManager.TabEvent.onUpdateTab, onUpdateTab);
-  tabManager.on(TabManager.TabEvent.onActivateTab, onActivateTab);
+  tabManager.on(Hawkeye.TabEvent.onAddWindow, onAddWindow);
+  tabManager.on(Hawkeye.TabEvent.onRemoveWindow, onRemoveWindow);
+  tabManager.on(Hawkeye.TabEvent.onAddTab, onAddTab);
+  tabManager.on(Hawkeye.TabEvent.onRemoveTab, onRemoveTab);
+  tabManager.on(Hawkeye.TabEvent.onCaptureTab, onCaptureTab);
+  tabManager.on(Hawkeye.TabEvent.onUpdateTab, onUpdateTab);
+  tabManager.on(Hawkeye.TabEvent.onActivateTab, onActivateTab);
 
   /*  Event Listeners Implementation
    * ================================================ */
 
-  function onAddWindow(window: TabManager.Window) {
+  function onAddWindow(window: Hawkeye.Window) {
     view.addWindow(window);
   }
 
@@ -240,7 +240,7 @@ $(function() {
     view.removeWindow(windowId);
   }
 
-  function onAddTab(tab: TabManager.Tab) {
+  function onAddTab(tab: Hawkeye.Tab) {
     view.addTab(tab);
   }
 
@@ -248,18 +248,18 @@ $(function() {
     view.removeTab(tabId);
   }
 
-  function onCaptureTab(tab: TabManager.Tab) {
+  function onCaptureTab(tab: Hawkeye.Tab) {
     console.log('----- capture tab');
     view.updateTab(tab.id, { snapshot: tab.snapshot });
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   }
 
-  function onUpdateTab(tab: TabManager.Tab) {
+  function onUpdateTab(tab: Hawkeye.Tab) {
     console.log('----- update tab');
     view.updateTab(tab.id, { title: tab.title, snapshot:tab.snapshot });
   }
 
-  function onActivateTab(tab: TabManager.Tab) {
+  function onActivateTab(tab: Hawkeye.Tab) {
     console.log('----- activate tab');
     view.updateWindow(tab.windowId, { snapshot:tab.snapshot });
   }

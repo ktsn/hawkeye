@@ -9,7 +9,7 @@
 /// <reference path='../../typings/tsd.d.ts'/>
 /// <reference path='util.ts'/>
 
-module TabManager {
+module Hawkeye {
 
   export var TabEvent = {
     onAddWindow: 'onaddwindow',
