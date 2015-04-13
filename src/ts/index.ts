@@ -1,7 +1,7 @@
 /**
  * index.ts
  * Copyright (c) 2014 katashin
- * https://github.com/ktsn/TabManager
+ * https://github.com/ktsn/hawkeye
  *
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
