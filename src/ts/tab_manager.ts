@@ -25,6 +25,8 @@ module Hawkeye {
     activeTabId: number;
     focusWindowId: number;
     capturing: boolean;
+    movingTab: Tab;
+
     windows: Window[]; // only manages 'normal' type windows
     tabs: Tab[]; // only manages the tabs on 'normal' type windows
 
@@ -130,6 +132,25 @@ module Hawkeye {
         tab.id = addedTabId;
         this.addTab(tab);
       });
+
+      chrome.tabs.onAttached.addListener((tabId: number, attachInfo: chrome.tabs.TabAttachInfo) => {
+        console.log('\n--------- onTabAttached');
+
+        if (this.movingTab == null) {
+          throw new Error('Unexpected Error: onTabAttached');
+        }
+
+        this.movingTab.windowId = attachInfo.newWindowId;
+        this.addTab(this.movingTab);
+
+        this.movingTab = null;
+      });
+
+      chrome.tabs.onDetached.addListener((tabId: number, detachInfo: chrome.tabs.TabDetachInfo) => {
+        console.log('\n--------- onTabDetached');
+        this.movingTab = this.findTab(tabId);
+        this.removeTab(this.movingTab);
+      });
     }
 
     addWindow(chWindow: chrome.windows.Window) : void {
@@ -180,7 +201,7 @@ module Hawkeye {
     captureActiveTab() : void {
       var tab = this.findTab(this.activeTabId);
 
-      var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading;
+      var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab;
 
       if (shouldCapture) {
         this.capturing = true;
