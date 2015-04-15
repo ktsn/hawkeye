@@ -121,6 +121,15 @@ module Hawkeye {
           this.captureActiveTab();
         }
       });
+
+      chrome.tabs.onReplaced.addListener((addedTabId: number, removedTabId: number) => {
+        console.log('\n--------- onTabReplaced');
+        var tab = this.findTab(removedTabId);
+        this.removeTab(tab);
+
+        tab.id = addedTabId;
+        this.addTab(tab);
+      });
     }
 
     addWindow(chWindow: chrome.windows.Window) : void {
@@ -154,8 +163,12 @@ module Hawkeye {
       return null;
     }
 
-    addTab(chTab: chrome.tabs.Tab) : void {
-      var tab = new Tab(chTab);
+    addTab(tab: Tab) : void;
+    addTab(chTab: chrome.tabs.Tab) : void;
+    addTab(tab: any) {
+      if (!(tab instanceof Tab)) {
+        tab = new Tab(tab);
+      }
       this.tabs.push(tab);
 
       console.log('added tab');
@@ -191,8 +204,12 @@ module Hawkeye {
       }
     }
 
-    removeTab(tabId: number) : void {
-      var tab = this.findTab(tabId);
+    removeTab(tab: Tab) : void;
+    removeTab(tabId: number) : void;
+    removeTab(tab: any) {
+      if (typeof tab === 'number') {
+        tab = this.findTab(tab);
+      }
       var index = this.tabs.indexOf(tab);
 
       if (index === -1) return;
@@ -202,7 +219,7 @@ module Hawkeye {
       console.log('removed tab');
       console.log(tab);
 
-      this.fire(TabEvent.onRemoveTab, tabId);
+      this.fire(TabEvent.onRemoveTab, tab.id);
     }
 
     findTab(id: number) : Tab {
