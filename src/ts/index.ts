@@ -202,6 +202,7 @@ $(function() {
   });
 
   $('#tab-size-input').on('input', (event: any) => {
+    view.currentTabWidth = event.target.value;
     view.resizeTabs(event.target.value);
   });
 
