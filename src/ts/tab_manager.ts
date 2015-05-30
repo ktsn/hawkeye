@@ -201,7 +201,7 @@ module Hawkeye {
     captureActiveTab() : void {
       var tab = this.findTab(this.activeTabId);
 
-      var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab;
+      var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab && tab.windowId === this.focusWindowId;
 
       if (shouldCapture) {
         this.capturing = true;
