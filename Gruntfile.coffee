@@ -37,7 +37,7 @@ module.exports = (grunt) ->
     typescript:
       base:
         src: ["<%= dir.src %>/ts/*.ts"]
-        dest: "tmp/"
+        dest: "<%= dir.dest %>/js/"
         options:
           module: "amd"
           target: "es5"
@@ -48,11 +48,6 @@ module.exports = (grunt) ->
         cwd: "<%= dir.src %>"
         src: ["**/*.html"]
         dest: "<%= dir.dest %>"
-      js:
-        expand: true
-        cwd: "tmp/<%= dir.src %>/ts/"
-        src: ["*.js"]
-        dest: "<%= dir.dest %>/js/"
       css:
         expand: true
         cwd: "<%= dir.src %>"
@@ -78,7 +73,7 @@ module.exports = (grunt) ->
     watch:
       typescript:
         files: "<%= dir.src %>/ts/**.ts"
-        tasks: ["typescript", "copy:js", "clean:tmpFolder"]
+        tasks: ["typescript", "clean:tmpFolder"]
       css:
         files: "<%= dir.src %>/css/**.css"
         tasks: ["copy:css"]
@@ -90,4 +85,4 @@ module.exports = (grunt) ->
         tasks: ["copy:html", "copy:images", "copy:manifest"]
 
   grunt.registerTask "default", ["watch"]
-  grunt.registerTask "build", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:js", "copy:css", "copy:images", "copy:manifest", "clean:tmpFolder"]
+  grunt.registerTask "build", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:css", "copy:images", "copy:manifest", "clean:tmpFolder"]
