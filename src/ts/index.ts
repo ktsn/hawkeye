@@ -48,6 +48,8 @@ class IndexView {
     this.tabWrapper = $('#tab-wrapper');
     this.windowTemplate = $($('#window-template').html());
     this.tabTemplate = $($('#tab-template').html());
+
+    this.tabWrapper.on('click', '.tab-remove-btn', this.onClickRemoveBtn);
   }
 
   addWindow(window: Hawkeye.Window) : void {
@@ -135,10 +137,6 @@ class IndexView {
       stack: '.tab'
     });
 
-    tabDom.on('click', '.tab-remove-btn', (event: JQueryEventObject) => {
-      chrome.tabs.remove(tab.id)
-    });
-
     tabDom.data('id', tab.id);
     tabDom.find('.template-image').css('background-image', 'url(' + tab.snapshot + ')');
     tabDom.find('.template-title').text(tab.title);
@@ -175,6 +173,10 @@ class IndexView {
     Object.keys(this.tabDomHash).forEach((tabId: string) => {
       this.resizeTab(this.tabDomHash[tabId], width);
     });
+  }
+
+  private onClickRemoveBtn(event: JQueryEventObject) {
+    chrome.tabs.remove($(event.target).closest('.tab').data('id'));
   }
 
   private resizeTab(tab: JQuery, width: number) : void {
