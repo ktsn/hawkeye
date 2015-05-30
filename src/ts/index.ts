@@ -50,6 +50,7 @@ class IndexView {
     this.tabTemplate = $($('#tab-template').html());
 
     this.tabWrapper.on('click', '.tab-remove-btn', this.onClickRemoveBtn);
+    this.tabWrapper.on('dblclick', '.tab', this.onDblClickTab);
   }
 
   addWindow(window: Hawkeye.Window) : void {
@@ -177,6 +178,18 @@ class IndexView {
 
   private onClickRemoveBtn(event: JQueryEventObject) {
     chrome.tabs.remove($(event.target).closest('.tab').data('id'));
+  }
+
+  private onDblClickTab(event: JQueryEventObject) {
+    var tabId: number = $(event.currentTarget).data('id');
+    var tab: Hawkeye.Tab = tabManager.findTab(tabId);
+
+    chrome.tabs.getCurrent((hawkeyeTab: chrome.tabs.Tab) => {
+      chrome.tabs.update(tabId, { active: true });
+      chrome.windows.update(tab.windowId, { focused: true });
+
+      chrome.tabs.remove(hawkeyeTab.id);
+    });
   }
 
   private resizeTab(tab: JQuery, width: number) : void {
