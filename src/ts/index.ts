@@ -44,12 +44,13 @@ class IndexView {
   currentTabWidth: number = DEFAULT_TAB_WIDTH;
 
   constructor() {
-    this.windowWrapper = $('#window-wrapper');
+    this.windowWrapper = $('#window-wrapper-inner');
     this.tabWrapper = $('#tab-wrapper');
     this.windowTemplate = $($('#window-template').html());
     this.tabTemplate = $($('#tab-template').html());
 
-    this.tabWrapper.on('click', '.tab-remove-btn', this.onClickRemoveBtn);
+    $('#window-add-btn').on('click', this.onClickAddWindow);
+    this.tabWrapper.on('click', '.tab-remove-btn', this.onClickRemoveTab);
     this.tabWrapper.on('dblclick', '.tab', this.onDblClickTab);
   }
 
@@ -176,7 +177,11 @@ class IndexView {
     });
   }
 
-  private onClickRemoveBtn(event: JQueryEventObject) {
+  private onClickAddWindow(event: JQueryEventObject) {
+    chrome.windows.create({ focused: false });
+  }
+
+  private onClickRemoveTab(event: JQueryEventObject) {
     chrome.tabs.remove($(event.target).closest('.tab').data('id'));
   }
 

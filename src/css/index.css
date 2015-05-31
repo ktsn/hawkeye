@@ -75,14 +75,23 @@ body {
   text-align: center;
 }
 
+#window-wrapper-inner {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .window {
   position: relative;
   display: inline-block;
   width: 120px;
   height: 90px;
-  margin: 15px 20px;
+  margin: 15px 0 15px 20px;
 
   background: #fff;
+}
+
+.window:first-child {
+  margin-left: 0;
 }
 
 .window-image {
@@ -104,6 +113,27 @@ body {
 
 .window-selected {
   outline: solid 5px rgba(57, 158, 210, 1);
+}
+
+#window-add-btn {
+  background-color: #808080;
+  border-radius: 3px;
+  border-width: 0;
+  cursor: pointer;
+  height: 90px;
+  line-height: 90px;
+  margin-left: 20px;
+  padding: 0;
+  vertical-align: middle;
+  width: 90px;
+}
+
+#window-add-btn:active {
+  background-color: #a5a5a5;
+}
+
+#window-add-btn img {
+  vertical-align: middle;
 }
 
 /* ==================================================

@@ -11,7 +11,12 @@
   <title>Hawkeye</title>
 </head>
 <body>
-<nav id="window-wrapper" class="clearfix"></nav>
+<nav id="window-wrapper">
+  <div id="window-wrapper-inner"></div>
+  <button id="window-add-btn" type="button">
+    <img src="images/btn-add-window.png" alt="Add Window" width="60" height="60">
+  </button>
+</nav>
 <div id="tab-wrapper"></div>
 <div id="controller">
   <input type="range" name="tab-size" id="tab-size-input" min="100" max="800" step="10">
