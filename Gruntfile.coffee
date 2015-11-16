@@ -7,6 +7,8 @@
  http://opensource.org/licenses/mit-license.php
 ###
 
+tsconfig = require './tsconfig'
+
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks "grunt-bower-task"
@@ -36,9 +38,9 @@ module.exports = (grunt) ->
 
     typescript:
       base:
-        src: ["<%= dir.src %>/ts/*.ts"]
+        src: tsconfig.files
         dest: "<%= dir.dest %>/js/"
-        options: require('./tsconfig.json').compilerOptions
+        options: tsconfig.compilerOptions
 
     copy:
       html:
