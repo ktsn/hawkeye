@@ -38,9 +38,7 @@ module.exports = (grunt) ->
       base:
         src: ["<%= dir.src %>/ts/*.ts"]
         dest: "<%= dir.dest %>/js/"
-        options:
-          module: "amd"
-          target: "es5"
+        options: require('./tsconfig.json').compilerOptions
 
     copy:
       html:
