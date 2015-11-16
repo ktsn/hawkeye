@@ -15,8 +15,11 @@
     "files": [
         "./src/ts/background.ts",
         "./src/ts/index.ts",
+        "./src/ts/snapshot.ts",
         "./src/ts/tab_manager.ts",
+        "./src/ts/tab.ts",
         "./src/ts/util.ts",
+        "./src/ts/window.ts",
         "./typings/chrome/chrome.d.ts",
         "./typings/es6-promise/es6-promise.d.ts",
         "./typings/filesystem/filesystem.d.ts",

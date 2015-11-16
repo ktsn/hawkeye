@@ -6,8 +6,6 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path='../../typings/tsd.d.ts'/>
-/// <reference path='tab_manager.ts'/>
 
 var tabManager = new Hawkeye.TabManager();
 
