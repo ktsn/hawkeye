@@ -12,7 +12,6 @@ tsconfig = require './tsconfig'
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks "grunt-bower-task"
-  grunt.loadNpmTasks "grunt-tsd"
   grunt.loadNpmTasks "grunt-typescript"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-clean"
@@ -29,12 +28,6 @@ module.exports = (grunt) ->
           targetDir: '<%= dir.dest %>/lib'
           layout: 'byComponent'
           install: true
-
-    tsd:
-      refresh:
-        options:
-          command: "reinstall"
-          config: "tsd.json"
 
     typescript:
       base:
@@ -85,4 +78,4 @@ module.exports = (grunt) ->
         tasks: ["copy:html", "copy:images", "copy:manifest"]
 
   grunt.registerTask "default", ["watch"]
-  grunt.registerTask "build", ["clean:destFolder", "bower", "tsd", "typescript", "copy:html", "copy:css", "copy:images", "copy:manifest", "clean:tmpFolder"]
+  grunt.registerTask "build", ["clean:destFolder", "bower", "typescript", "copy:html", "copy:css", "copy:images", "copy:manifest", "clean:tmpFolder"]

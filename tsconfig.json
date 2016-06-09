@@ -1,32 +1,29 @@
 {
-    "version": "1.6.2",
-    "compilerOptions": {
-        "target": "es5",
-        "declaration": false,
-        "noImplicitAny": false,
-        "removeComments": true,
-        "noLib": false
-    },
-    "compileOnSave": false,
-    "filesGlob": [
-        "./**/*.ts",
-        "!./node_modules/**/*.ts"
-    ],
-    "files": [
-        "./src/ts/background.ts",
-        "./src/ts/index.ts",
-        "./src/ts/snapshot.ts",
-        "./src/ts/tab_manager.ts",
-        "./src/ts/tab.ts",
-        "./src/ts/util.ts",
-        "./src/ts/window.ts",
-        "./typings/chrome/chrome.d.ts",
-        "./typings/es6-promise/es6-promise.d.ts",
-        "./typings/filesystem/filesystem.d.ts",
-        "./typings/filewriter/filewriter.d.ts",
-        "./typings/jquery/jquery.d.ts",
-        "./typings/jqueryui/jqueryui.d.ts",
-        "./typings/tsd.d.ts",
-        "./typings/webrtc/MediaStream.d.ts"
-    ]
+  "version": "1.6.2",
+  "compilerOptions": {
+    "target": "es5",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false
+  },
+  "compileOnSave": false,
+  "filesGlob": [
+    "src/**/*.ts",
+    "typings/index.d.ts",
+    "!node_modules/**/*.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
+  },
+  "files": [
+    "src/ts/background.ts",
+    "src/ts/index.ts",
+    "src/ts/snapshot.ts",
+    "src/ts/tab_manager.ts",
+    "src/ts/tab.ts",
+    "src/ts/util.ts",
+    "src/ts/window.ts",
+    "typings/index.d.ts"
+  ]
 }
