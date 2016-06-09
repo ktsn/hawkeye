@@ -9,6 +9,9 @@
   "background": {
     "scripts": [
       "js/util.js",
+      "js/tab.js",
+      "js/window.js",
+      "js/snapshot.js",
       "js/tab_manager.js",
       "js/background.js"
     ]
