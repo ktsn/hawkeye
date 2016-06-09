@@ -9,19 +9,21 @@
   },
   "compileOnSave": false,
   "filesGlob": [
-    "./**/*.ts",
-    "!./node_modules/**/*.ts"
-  ],
-  "files": [
-    "./src/ts/background.ts",
-    "./src/ts/index.ts",
-    "./src/ts/snapshot.ts",
-    "./src/ts/tab_manager.ts",
-    "./src/ts/tab.ts",
-    "./src/ts/util.ts",
-    "./src/ts/window.ts"
+    "src/**/*.ts",
+    "typings/index.d.ts",
+    "!node_modules/**/*.ts"
   ],
   "atom": {
     "rewriteTsconfig": true
-  }
+  },
+  "files": [
+    "src/ts/background.ts",
+    "src/ts/index.ts",
+    "src/ts/snapshot.ts",
+    "src/ts/tab_manager.ts",
+    "src/ts/tab.ts",
+    "src/ts/util.ts",
+    "src/ts/window.ts",
+    "typings/index.d.ts"
+  ]
 }
