@@ -6,8 +6,6 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path='../../typings/tsd.d.ts'/>
-/// <reference path='util.ts'/>
 
 module Hawkeye {
 
@@ -263,76 +261,4 @@ module Hawkeye {
       });
     }
   }
-
-  export class Window {
-    id: number;
-
-    constructor(window: chrome.windows.Window) {
-      this.id = window.id;
-    }
-  }
-
-  export class Tab {
-    id: number;
-    title: string;
-    url: string;
-    loading: boolean;
-    windowId: number;
-
-    private _snapshot: Snapshot;
-
-    constructor(tab: chrome.tabs.Tab) {
-      this.id = tab.id;
-      this.title = tab.title;
-      this.url = tab.url;
-      this.loading = tab.status === 'loading';
-      this.windowId = tab.windowId;
-      this._snapshot = new Snapshot();
-    }
-
-    set snapshot(dataUrl: string) {
-      this._snapshot.setDataUrl(dataUrl, this.url);
-    }
-
-    get snapshot() : string {
-      return this._snapshot.dataUrl;
-    }
-
-    get capturedDate() : Date {
-      return this._snapshot.capturedDate;
-    }
-
-    get capturedUrl() : string {
-      return this._snapshot.capturedUrl;
-    }
-  }
-
-  class Snapshot {
-    private _dataUrl: string;
-    private _capturedDate: Date;
-    private _capturedUrl: string;
-
-    constructor() {
-      this._capturedDate = new Date(0);
-    }
-
-    setDataUrl(dataUrl: string, capturedUrl: string) {
-      this._dataUrl = dataUrl;
-      this._capturedDate = new Date();
-      this._capturedUrl = capturedUrl;
-    }
-
-    get dataUrl() : string {
-      return this._dataUrl;
-    }
-
-    get capturedDate() : Date {
-      return this._capturedDate;
-    }
-
-    get capturedUrl() : string {
-      return this._capturedUrl;
-    }
-  }
-
 }

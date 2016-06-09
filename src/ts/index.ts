@@ -6,8 +6,6 @@
  * This software is released under the MIT License.
  * http://opensource.org/licenses/mit-license.php
  */
-/// <reference path='../../typings/tsd.d.ts'/>
-/// <reference path='tab_manager.ts'/>
 
 var DEFAULT_TAB_WIDTH = 400;
 var TAB_HEIGHT_PER_WIDTH = 3 / 4;
