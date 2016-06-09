@@ -9,11 +9,12 @@
 
 
 module Util {
+  type Listener = (data?: any) => void;
 
   export class Observable {
-    listeners: any = {};
+    listeners: { [key: string] : Listener[] } = {};
 
-    on(name: string, callback: Function) : void {
+    on(name: string, callback: Listener) : void {
       if (this.listeners[name] == null) {
         this.listeners[name] = [];
       }

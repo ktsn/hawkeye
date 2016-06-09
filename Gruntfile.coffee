@@ -7,12 +7,9 @@
  http://opensource.org/licenses/mit-license.php
 ###
 
-tsconfig = require './tsconfig'
-
 module.exports = (grunt) ->
 
   grunt.loadNpmTasks "grunt-bower-task"
-  grunt.loadNpmTasks "grunt-typescript"
   grunt.loadNpmTasks "grunt-contrib-copy"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-watch"
@@ -28,12 +25,6 @@ module.exports = (grunt) ->
           targetDir: '<%= dir.dest %>/lib'
           layout: 'byComponent'
           install: true
-
-    typescript:
-      base:
-        src: tsconfig.files
-        dest: "<%= dir.dest %>/js/"
-        options: tsconfig.compilerOptions
 
     copy:
       html:
@@ -57,16 +48,7 @@ module.exports = (grunt) ->
         src: ["manifest.json"]
         dest: "<%= dir.dest %>"
 
-    clean:
-      destFolder:
-        src: "<%= dir.dest %>"
-      tmpFolder:
-        src: "tmp/"
-
     watch:
-      typescript:
-        files: "<%= dir.src %>/ts/**.ts"
-        tasks: ["typescript", "clean:tmpFolder"]
       css:
         files: "<%= dir.src %>/css/**.css"
         tasks: ["copy:css"]
@@ -78,4 +60,4 @@ module.exports = (grunt) ->
         tasks: ["copy:html", "copy:images", "copy:manifest"]
 
   grunt.registerTask "default", ["watch"]
-  grunt.registerTask "build", ["clean:destFolder", "bower", "typescript", "copy:html", "copy:css", "copy:images", "copy:manifest", "clean:tmpFolder"]
+  grunt.registerTask "build", ["bower", "copy:html", "copy:css", "copy:images", "copy:manifest"]
