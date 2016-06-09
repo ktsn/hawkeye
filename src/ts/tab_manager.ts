@@ -9,7 +9,7 @@
 
 module Hawkeye {
 
-  export var TabEvent = {
+  export const TabEvent = {
     onAddWindow: 'onaddwindow',
     onRemoveWindow: 'onremovewindow',
     onAddTab: 'onaddtab',
@@ -30,7 +30,7 @@ module Hawkeye {
 
     constructor() {
       super();
-      var query = { windowType: 'normal' };
+      const query = { windowType: 'normal' };
       chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
         this.tabs = chTabs.map((t) => new Tab(t));
         console.log('--------- initialized tabs');
@@ -38,7 +38,7 @@ module Hawkeye {
       });
 
       chrome.windows.getAll((chWindows: chrome.windows.Window[]) => {
-        var normalWindows = chWindows.filter((w) => w.type === 'normal');
+        const normalWindows = chWindows.filter((w) => w.type === 'normal');
         this.windows = normalWindows.map((w) => new Window(w));
         console.log('--------- initialized windows');
         console.log(this.windows);
@@ -65,10 +65,10 @@ module Hawkeye {
         console.log('\n--------- onWindowFocusChanged');
         this.focusWindowId = windowId;
 
-        var window = this.findWindow(windowId);
+        const window = this.findWindow(windowId);
         if (window != null) {
           // get the current active tab
-          var query = { active: true, currentWindow: true };
+          const query = { active: true, currentWindow: true };
           chrome.tabs.query(query, (chTabs: chrome.tabs.Tab[]) => {
             this.activeTabId = chTabs[0].id;
             this.captureActiveTab();
@@ -80,7 +80,7 @@ module Hawkeye {
 
       chrome.tabs.onCreated.addListener((chTab: chrome.tabs.Tab) => {
         console.log('\n--------- onTabCreated');
-        var parentWindow = this.findWindow(chTab.windowId);
+        const parentWindow = this.findWindow(chTab.windowId);
         if (parentWindow != null) {
           this.addTab(chTab);
         }
@@ -88,7 +88,7 @@ module Hawkeye {
 
       chrome.tabs.onRemoved.addListener((tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) => {
         console.log('\n--------- onTabRemoved');
-        var parentWindow = this.findWindow(removeInfo.windowId);
+        const parentWindow = this.findWindow(removeInfo.windowId);
         if (parentWindow != null) {
           this.removeTab(tabId);
         }
@@ -96,7 +96,7 @@ module Hawkeye {
 
       chrome.tabs.onUpdated.addListener((tabId: number, changeInfo: chrome.tabs.TabChangeInfo, chTab: chrome.tabs.Tab) => {
         console.log('\n--------- onTabUpdated ' + changeInfo.status);
-        var tab = this.findTab(tabId);
+        const tab = this.findTab(tabId);
         if (tab != null) {
           tab.title = chTab.title || tab.title;
           tab.url = changeInfo.url || chTab.url || tab.url;
@@ -112,8 +112,8 @@ module Hawkeye {
 
       chrome.tabs.onActivated.addListener((activeInfo: chrome.tabs.TabActiveInfo) => {
         console.log('\n--------- onTabActivate');
-        var parentWindow = this.findWindow(activeInfo.windowId);
-        var tab = this.findTab(activeInfo.tabId);
+        const parentWindow = this.findWindow(activeInfo.windowId);
+        const tab = this.findTab(activeInfo.tabId);
         if (parentWindow != null) {
           this.activeTabId = activeInfo.tabId;
           this.fire(TabEvent.onActivateTab, tab);
@@ -124,7 +124,7 @@ module Hawkeye {
 
       chrome.tabs.onReplaced.addListener((addedTabId: number, removedTabId: number) => {
         console.log('\n--------- onTabReplaced');
-        var tab = this.findTab(removedTabId);
+        const tab = this.findTab(removedTabId);
         this.removeTab(tab);
 
         tab.id = addedTabId;
@@ -152,7 +152,7 @@ module Hawkeye {
     }
 
     addWindow(chWindow: chrome.windows.Window) : void {
-      var window = new Window(chWindow);
+      const window = new Window(chWindow);
       this.windows.push(window);
 
       console.log('added window');
@@ -162,8 +162,8 @@ module Hawkeye {
     }
 
     removeWindow(windowId: number) : void {
-      var window = this.findWindow(windowId);
-      var index = this.windows.indexOf(window);
+      const window = this.findWindow(windowId);
+      const index = this.windows.indexOf(window);
 
       if (index === -1) return;
 
@@ -176,7 +176,7 @@ module Hawkeye {
     }
 
     findWindow(id: number) : Window {
-      for (var i = 0, len = this.windows.length; i < len; i++) {
+      for (let i = 0, len = this.windows.length; i < len; i++) {
         if (this.windows[i].id === id) return this.windows[i];
       }
       return null;
@@ -197,9 +197,9 @@ module Hawkeye {
     }
 
     captureActiveTab() : void {
-      var tab = this.findTab(this.activeTabId);
+      const tab = this.findTab(this.activeTabId);
 
-      var shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab && tab.windowId === this.focusWindowId;
+      const shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab && tab.windowId === this.focusWindowId;
 
       if (shouldCapture) {
         this.capturing = true;
@@ -229,7 +229,7 @@ module Hawkeye {
       if (typeof tab === 'number') {
         tab = this.findTab(tab);
       }
-      var index = this.tabs.indexOf(tab);
+      const index = this.tabs.indexOf(tab);
 
       if (index === -1) return;
 
@@ -242,7 +242,7 @@ module Hawkeye {
     }
 
     findTab(id: number) : Tab {
-      for (var i = 0, len = this.tabs.length; i < len; i++) {
+      for (let i = 0, len = this.tabs.length; i < len; i++) {
         if (this.tabs[i].id === id) return this.tabs[i];
       }
       return null;
@@ -256,7 +256,7 @@ module Hawkeye {
       console.log('------ move tab(' + tabId + ') to window(' + toWindowId + ')');
 
       chrome.tabs.move(tabId, { windowId: toWindowId, index: -1 }, (chTab: chrome.tabs.Tab) => { // always add to the end of the window
-        var tab = this.findTab(tabId);
+        const tab = this.findTab(tabId);
         tab.windowId = toWindowId;
       });
     }
