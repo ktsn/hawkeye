@@ -1,15 +1,14 @@
 {
   "version": "1.6.2",
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "declaration": false,
-    "noImplicitAny": false,
-    "removeComments": true,
-    "noLib": false
+    "noImplicitAny": true,
+    "outDir": "dest/js"
   },
   "compileOnSave": false,
   "filesGlob": [
-    "src/**/*.ts",
+    "src/ts/**/*.ts",
     "typings/index.d.ts",
     "!node_modules/**/*.ts"
   ],

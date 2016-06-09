@@ -3,7 +3,6 @@
   "dependencies": {},
   "globalDependencies": {
     "chrome": "registry:dt/chrome#0.0.0+20160509083626",
-    "es6-promise": "registry:dt/es6-promise#0.0.0+20160423074304",
     "filesystem": "registry:dt/filesystem#0.0.0+20160316155526",
     "filewriter": "registry:dt/filewriter#0.0.0+20160316155526",
     "jquery": "registry:dt/jquery#1.10.0+20160417213236",
