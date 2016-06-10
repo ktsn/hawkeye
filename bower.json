@@ -1,8 +1,7 @@
 {
-  "name": "Hawkeye",
-  "version": "0.1.0",
+  "name": "hawkeye",
   "dependencies": {
-    "jquery": "~2.1.1",
-    "jquery-ui": "~1.11.1"
+    "jquery": "^3.0.0",
+    "jquery-ui": "^1.11.4"
   }
 }
