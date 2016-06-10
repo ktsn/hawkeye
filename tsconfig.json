@@ -18,11 +18,11 @@
   "files": [
     "src/ts/background.ts",
     "src/ts/index.ts",
-    "src/ts/snapshot.ts",
+    "src/ts/model/snapshot.ts",
+    "src/ts/model/tab.ts",
+    "src/ts/model/window.ts",
     "src/ts/tab_manager.ts",
-    "src/ts/tab.ts",
     "src/ts/util.ts",
-    "src/ts/window.ts",
     "typings/index.d.ts"
   ]
 }
