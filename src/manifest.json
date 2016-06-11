@@ -8,7 +8,7 @@
 
   "background": {
     "scripts": [
-      "js/util.js",
+      "js/util/observable.js",
       "js/model/tab.js",
       "js/model/window.js",
       "js/model/snapshot.js",
