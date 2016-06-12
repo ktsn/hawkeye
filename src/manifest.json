@@ -10,6 +10,8 @@
     "scripts": [
       "js/util/observable.js",
       "js/util/db.js",
+      "js/service/database_service.js",
+      "js/repository/snapshot_repository.js",
       "js/model/tab.js",
       "js/model/window.js",
       "js/model/snapshot.js",
