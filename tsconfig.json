@@ -22,6 +22,7 @@
     "src/ts/model/tab.ts",
     "src/ts/model/window.ts",
     "src/ts/tab_manager.ts",
+    "src/ts/util/db.ts",
     "src/ts/util/observable.ts",
     "typings/index.d.ts"
   ]
