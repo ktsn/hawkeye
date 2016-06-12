@@ -8,11 +8,16 @@
  */
 
 module Index {
+  import Tab = Hawkeye.Model.Tab;
+  import Window = Hawkeye.Model.Window;
+  import TabManager = Hawkeye.TabManager;
+  import TabEvent = Hawkeye.TabEvent;
+
   const DEFAULT_TAB_WIDTH = 400;
   const TAB_HEIGHT_PER_WIDTH = 3 / 4;
 
   const backgroundWindow: any = chrome.extension.getBackgroundPage();
-  const tabManager: Hawkeye.TabManager = backgroundWindow.tabManager;
+  const tabManager: TabManager = backgroundWindow.tabManager;
 
   /*  Interfaces
      =============================================== */
@@ -53,7 +58,7 @@ module Index {
       this.tabWrapper.on('dblclick', '.tab', this.onDblClickTab);
     }
 
-    addWindow(window: Hawkeye.Window) : void {
+    addWindow(window: Window) : void {
       const windowDom = this.windowTemplate.clone();
 
       // be droppable to move tabs to the window
@@ -116,13 +121,13 @@ module Index {
       // display tabs on the current selected window
       this.tabWrapper.children().remove();
       this.tabDomHash = {};
-      const tabs: Hawkeye.Tab[] = tabManager.findTabsByWindowId(windowId);
+      const tabs: Tab[] = tabManager.findTabsByWindowId(windowId);
       tabs.forEach((tab) => {
         this.addTab(tab);
       });
     }
 
-    addTab(tab: Hawkeye.Tab) : void {
+    addTab(tab: Tab) : void {
       const tabDom = this.tabTemplate.clone();
 
       // be draggable the tab to move to any windows
@@ -182,7 +187,7 @@ module Index {
 
     private onDblClickTab(event: JQueryEventObject) {
       const tabId: number = $(event.currentTarget).data('id');
-      const tab: Hawkeye.Tab = tabManager.findTab(tabId);
+      const tab: Tab = tabManager.findTab(tabId);
 
       chrome.tabs.getCurrent((hawkeyeTab: chrome.tabs.Tab) => {
         chrome.tabs.update(tabId, { active: true });
@@ -225,30 +230,30 @@ module Index {
      * ================================================ */
 
      $(window).on('unload', function() {
-       tabManager.off(Hawkeye.TabEvent.onAddWindow, onAddWindow);
-       tabManager.off(Hawkeye.TabEvent.onRemoveWindow, onRemoveWindow);
-       tabManager.off(Hawkeye.TabEvent.onAddTab, onAddTab);
-       tabManager.off(Hawkeye.TabEvent.onRemoveTab, onRemoveTab);
-       tabManager.off(Hawkeye.TabEvent.onCaptureTab, onCaptureTab);
-       tabManager.off(Hawkeye.TabEvent.onUpdateTab, onUpdateTab);
-       tabManager.off(Hawkeye.TabEvent.onActivateTab, onActivateTab);
+       tabManager.off(TabEvent.onAddWindow, onAddWindow);
+       tabManager.off(TabEvent.onRemoveWindow, onRemoveWindow);
+       tabManager.off(TabEvent.onAddTab, onAddTab);
+       tabManager.off(TabEvent.onRemoveTab, onRemoveTab);
+       tabManager.off(TabEvent.onCaptureTab, onCaptureTab);
+       tabManager.off(TabEvent.onUpdateTab, onUpdateTab);
+       tabManager.off(TabEvent.onActivateTab, onActivateTab);
      });
 
     /*  Event Listeners
      * ================================================ */
 
-    tabManager.on(Hawkeye.TabEvent.onAddWindow, onAddWindow);
-    tabManager.on(Hawkeye.TabEvent.onRemoveWindow, onRemoveWindow);
-    tabManager.on(Hawkeye.TabEvent.onAddTab, onAddTab);
-    tabManager.on(Hawkeye.TabEvent.onRemoveTab, onRemoveTab);
-    tabManager.on(Hawkeye.TabEvent.onCaptureTab, onCaptureTab);
-    tabManager.on(Hawkeye.TabEvent.onUpdateTab, onUpdateTab);
-    tabManager.on(Hawkeye.TabEvent.onActivateTab, onActivateTab);
+    tabManager.on(TabEvent.onAddWindow, onAddWindow);
+    tabManager.on(TabEvent.onRemoveWindow, onRemoveWindow);
+    tabManager.on(TabEvent.onAddTab, onAddTab);
+    tabManager.on(TabEvent.onRemoveTab, onRemoveTab);
+    tabManager.on(TabEvent.onCaptureTab, onCaptureTab);
+    tabManager.on(TabEvent.onUpdateTab, onUpdateTab);
+    tabManager.on(TabEvent.onActivateTab, onActivateTab);
 
     /*  Event Listeners Implementation
      * ================================================ */
 
-    function onAddWindow(window: Hawkeye.Window) {
+    function onAddWindow(window: Window) {
       view.addWindow(window);
     }
 
@@ -256,7 +261,7 @@ module Index {
       view.removeWindow(windowId);
     }
 
-    function onAddTab(tab: Hawkeye.Tab) {
+    function onAddTab(tab: Tab) {
       view.addTab(tab);
     }
 
@@ -264,18 +269,18 @@ module Index {
       view.removeTab(tabId);
     }
 
-    function onCaptureTab(tab: Hawkeye.Tab) {
+    function onCaptureTab(tab: Tab) {
       console.log('----- capture tab');
       view.updateTab(tab.id, { snapshot: tab.snapshot });
       view.updateWindow(tab.windowId, { snapshot: tab.snapshot });
     }
 
-    function onUpdateTab(tab: Hawkeye.Tab) {
+    function onUpdateTab(tab: Tab) {
       console.log('----- update tab');
       view.updateTab(tab.id, { title: tab.title, snapshot: tab.snapshot });
     }
 
-    function onActivateTab(tab: Hawkeye.Tab) {
+    function onActivateTab(tab: Tab) {
       console.log('----- activate tab');
       view.updateWindow(tab.windowId, { snapshot: tab.snapshot });
     }

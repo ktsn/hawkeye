@@ -7,7 +7,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-module Hawkeye {
+module Hawkeye.Repository {
+
   export class SnapshotRepository {
     static storeName: string = 'snapshots';
     static keyPath: string = 'url';
@@ -23,7 +24,7 @@ module Hawkeye {
 
     constructor() {}
 
-    put(snapshot: Snapshot) : Promise<void> {
+    put(snapshot: Model.Snapshot) : Promise<void> {
       console.log('Before saving snapshot: ', snapshot);
 
       return Service
@@ -37,7 +38,7 @@ module Hawkeye {
         .then(_ => console.log('After saving snapshot: ', snapshot));
     }
 
-    get(url: string) : Promise<Snapshot> {
+    get(url: string) : Promise<Model.Snapshot> {
       console.log('Before getting snapshot of', url);
 
       return Service
@@ -58,7 +59,7 @@ module Hawkeye {
         });
     }
 
-    private serialize(s: Snapshot) : { [key: string] : any } {
+    private serialize(s: Model.Snapshot) : { [key: string] : any } {
       return {
         image: s._dataUrl,
         url: s._capturedUrl,
@@ -66,8 +67,8 @@ module Hawkeye {
       };
     }
 
-    private deserialize(o: { [key: string] : any }) : Snapshot {
-      return new Snapshot(
+    private deserialize(o: { [key: string] : any }) : Model.Snapshot {
+      return new Model.Snapshot(
         o['image'],
         o['url'],
         o['capturedDate']

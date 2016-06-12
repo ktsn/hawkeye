@@ -8,6 +8,8 @@
  */
 
 module Hawkeye.Service {
+  import Repository = Hawkeye.Repository;
+
   const DATABASE_NAME = 'hawkeye';
   const DATABASE_VERSION = 1;
 
@@ -50,6 +52,9 @@ module Hawkeye.Service {
 
     const db: IDBDatabase = (<IDBOpenDBRequest>event.target).result;
 
-    db.createObjectStore(SnapshotRepository.storeName, { keyPath: SnapshotRepository.keyPath });
+    db.createObjectStore(
+      Repository.SnapshotRepository.storeName,
+      { keyPath: Repository.SnapshotRepository.keyPath }
+    );
   }
 }

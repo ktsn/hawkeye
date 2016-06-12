@@ -7,7 +7,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-module Hawkeye {
+module Hawkeye.Model {
+  import SnapshotRepository = Hawkeye.Repository.SnapshotRepository;
+
   export class Tab {
     id: number;
     title: string;
