@@ -63,7 +63,7 @@ module Hawkeye.Repository {
       return {
         image: s._dataUrl,
         url: s._capturedUrl,
-        capturedDate: s._capturedDate
+        capturedDate: s._capturedDate.getTime()
       };
     }
 
@@ -71,7 +71,7 @@ module Hawkeye.Repository {
       return new Model.Snapshot(
         o['image'],
         o['url'],
-        o['capturedDate']
+        new Date(o['capturedDate'])
       );
     }
   }
