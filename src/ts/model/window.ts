@@ -7,7 +7,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-module Hawkeye {
+module Hawkeye.Model {
   export class Window {
     id: number;
 

@@ -18,11 +18,14 @@
   "files": [
     "src/ts/background.ts",
     "src/ts/index.ts",
-    "src/ts/snapshot.ts",
+    "src/ts/model/snapshot.ts",
+    "src/ts/model/tab.ts",
+    "src/ts/model/window.ts",
+    "src/ts/repository/snapshot_repository.ts",
+    "src/ts/service/database_service.ts",
     "src/ts/tab_manager.ts",
-    "src/ts/tab.ts",
-    "src/ts/util.ts",
-    "src/ts/window.ts",
+    "src/ts/util/db.ts",
+    "src/ts/util/observable.ts",
     "typings/index.d.ts"
   ]
 }

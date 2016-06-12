@@ -8,6 +8,8 @@
  */
 
 module Hawkeye {
+  import Tab = Model.Tab;
+  import Window = Model.Window;
 
   export const TabEvent = {
     onAddWindow: 'onaddwindow',

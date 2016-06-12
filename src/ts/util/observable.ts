@@ -1,5 +1,5 @@
 /**
- * util.ts
+ * observable.ts
  * Copyright (c) 2014 katashin
  * https://github.com/ktsn/hawkeye
  *

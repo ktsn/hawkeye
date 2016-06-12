@@ -7,15 +7,14 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-module Hawkeye {
+module Hawkeye.Model {
   export class Snapshot {
-    private _dataUrl: string;
-    private _capturedDate: Date;
-    private _capturedUrl: string;
 
-    constructor() {
-      this._capturedDate = new Date(0);
-    }
+    constructor(
+      public _dataUrl?: string,
+      public _capturedUrl?: string,
+      public _capturedDate: Date = new Date(0)
+    ) {}
 
     setDataUrl(dataUrl: string, capturedUrl: string) {
       this._dataUrl = dataUrl;

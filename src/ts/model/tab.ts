@@ -7,7 +7,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-module Hawkeye {
+module Hawkeye.Model {
+  import SnapshotRepository = Hawkeye.Repository.SnapshotRepository;
+
   export class Tab {
     id: number;
     title: string;
@@ -24,10 +26,20 @@ module Hawkeye {
       this.loading = tab.status === 'loading';
       this.windowId = tab.windowId;
       this._snapshot = new Snapshot();
+
+      // Retrieve snapshot for given url
+      SnapshotRepository.instance.get(this.url)
+        .then(snapshot => {
+          if (snapshot != null) {
+            this._snapshot = snapshot;
+          }
+        });
     }
 
     set snapshot(dataUrl: string) {
       this._snapshot.setDataUrl(dataUrl, this.url);
+
+      SnapshotRepository.instance.put(this._snapshot);
     }
 
     get snapshot() : string {
