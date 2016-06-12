@@ -24,7 +24,6 @@ module Hawkeye {
   export class TabManager extends Util.Observable {
     activeTabId: number;
     focusWindowId: number;
-    capturing: boolean;
     movingTab: Tab;
 
     windows: Window[]; // only manages 'normal' type windows
@@ -108,7 +107,9 @@ module Hawkeye {
 
           this.fire(TabEvent.onUpdateTab, tab);
 
-          this.captureActiveTab();
+          if (this.activeTabId === tab.id) {
+            this.captureActiveTab();
+          }
         }
       });
 
@@ -201,14 +202,12 @@ module Hawkeye {
     captureActiveTab() : void {
       const tab = this.findTab(this.activeTabId);
 
-      const shouldCapture = !this.capturing && tab.capturedUrl !== tab.url && !tab.loading && !this.movingTab && tab.windowId === this.focusWindowId;
+      const shouldCapture = !tab.loading && !this.movingTab && tab.windowId === this.focusWindowId;
 
       if (shouldCapture) {
-        this.capturing = true;
         console.log('will capture visible tab');
 
         chrome.tabs.captureVisibleTab(null, (dataUrl: string) => {
-          this.capturing = false;
 
           // when the browser occurs internal error
           if (dataUrl == null) {
