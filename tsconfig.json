@@ -21,6 +21,7 @@
     "src/ts/model/snapshot.ts",
     "src/ts/model/tab.ts",
     "src/ts/model/window.ts",
+    "src/ts/repository/config_repository.ts",
     "src/ts/repository/snapshot_repository.ts",
     "src/ts/service/database_service.ts",
     "src/ts/tab_manager.ts",

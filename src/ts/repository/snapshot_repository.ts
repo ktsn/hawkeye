@@ -22,8 +22,6 @@ module Hawkeye.Repository {
       return this._instance;
     }
 
-    constructor() {}
-
     put(snapshot: Model.Snapshot) : Promise<void> {
       console.log('Before saving snapshot: ', snapshot);
 

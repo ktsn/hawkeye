@@ -15,8 +15,6 @@ module Hawkeye.Service {
   let _db: IDBDatabase = null;
   let _promise: Promise<IDBDatabase> = null;
 
-  type KeyPath = string | number;
-
   export function getDatabase() : Promise<IDBDatabase> {
     if (_db !== null) {
       return Promise.resolve(_db);

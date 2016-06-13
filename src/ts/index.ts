@@ -10,6 +10,7 @@
 module Index {
   import Tab = Hawkeye.Model.Tab;
   import Window = Hawkeye.Model.Window;
+  import ConfigRepository = Hawkeye.Repository.ConfigRepository;
   import TabManager = Hawkeye.TabManager;
   import TabEvent = Hawkeye.TabEvent;
 
@@ -45,7 +46,7 @@ module Index {
     tabDomHash: any = {};
 
     selectedWindowId: number = -1;
-    currentTabWidth: number = DEFAULT_TAB_WIDTH;
+    currentTabWidth: number = ConfigRepository.instance.thumbnailSize || DEFAULT_TAB_WIDTH;
 
     constructor() {
       this.windowWrapper = $('#window-wrapper-inner');
@@ -200,6 +201,8 @@ module Index {
     private resizeTab(tab: JQuery, width: number) : void {
       tab.width(width);
       tab.height(width * TAB_HEIGHT_PER_WIDTH);
+
+      ConfigRepository.instance.thumbnailSize = width;
     }
   }
 
@@ -221,10 +224,12 @@ module Index {
       view.selectWindow(focusWindowId);
     });
 
-    $('#tab-size-input').on('input', (event: any) => {
-      view.currentTabWidth = event.target.value;
-      view.resizeTabs(event.target.value);
-    });
+    $('#tab-size-input')
+      .val(view.currentTabWidth)
+      .on('input', (event: any) => {
+        view.currentTabWidth = event.target.value;
+        view.resizeTabs(event.target.value);
+      });
 
     /*  remove event listeners when the page is closed
      * ================================================ */
