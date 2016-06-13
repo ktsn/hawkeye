@@ -8,7 +8,6 @@
  */
 
 module Hawkeye.Service {
-  import Repository = Hawkeye.Repository;
 
   const DATABASE_NAME = 'hawkeye';
   const DATABASE_VERSION = 1;
